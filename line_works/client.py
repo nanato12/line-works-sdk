@@ -13,8 +13,8 @@ from line_works.enums.yes_no_option import YesNoOption
 from line_works.exceptions import GetMyInfoException, LoginException
 from line_works.requests.login import LoginRequest
 from line_works.responses.get_my_info import GetMyInfoResponse
-from line_works.url.auth import AuthURL
-from line_works.url.talk import TalkURL
+from line_works.urls.auth import AuthURL
+from line_works.urls.talk import TalkURL
 from line_works.utils import get_msec
 from logger import get_file_path_logger
 
