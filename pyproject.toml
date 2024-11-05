@@ -13,7 +13,7 @@ fixable = ["ALL"]
 unfixable = []
 
 [tool.ruff.lint.per-file-ignores]
-"__init__.py" = ["E402"]
+"__init__.py" = ["F401"]
 
 [tool.mypy]
 explicit_package_bases = true
