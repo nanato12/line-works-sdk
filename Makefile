@@ -3,6 +3,7 @@ init:
 	pip install --upgrade pip
 	pip install -r requirements.txt
 	pip install -r requirements-dev.txt
+	test -f .env || cp .env.template .env
 
 .PHONY: run
 run:
