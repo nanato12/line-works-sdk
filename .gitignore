@@ -133,3 +133,4 @@ dmypy.json
 
 # app
 .sessions
+sample.py
