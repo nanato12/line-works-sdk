@@ -1,17 +1,23 @@
 import logging
 from logging import StreamHandler, basicConfig
 from logging.handlers import TimedRotatingFileHandler
-from os import makedirs
+from os import environ, makedirs
 
-from app.logger import get_file_path_logger
+from dotenv import load_dotenv
+
+from line_works.client import LineWorks
+from logger import get_file_path_logger
 
 LOG_DIRECTORY = "logs"
+makedirs(LOG_DIRECTORY, exist_ok=True)
 
-logger = get_file_path_logger(__name__)
+load_dotenv(".env", verbose=True)
+
+WORKS_ID = environ["WORKS_ID"]
+PASSWORD = environ["PASSWORD"]
 
 if __name__ == "__main__":
-    makedirs(LOG_DIRECTORY, exist_ok=True)
-
+    logger = get_file_path_logger(__name__)
     basicConfig(
         level=logging.INFO,
         datefmt="%Y/%m/%d %H:%M:%S",
@@ -29,3 +35,7 @@ if __name__ == "__main__":
     )
 
     logger.info("hello.")
+
+    works = LineWorks(works_id=WORKS_ID, password=PASSWORD)
+    my_info = works.get_my_info()
+    logger.info(f"{my_info=}")
