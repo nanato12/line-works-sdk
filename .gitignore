@@ -130,3 +130,6 @@ dmypy.json
 
 # app logs
 /logs
+
+# app
+.sessions
