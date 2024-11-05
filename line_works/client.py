@@ -81,7 +81,7 @@ class LineWorks(BaseModel):
 
     def get_my_info(self) -> GetMyInfoResponse:
         try:
-            res = GetMyInfoResponse.model_validate(
+            res: GetMyInfoResponse = GetMyInfoResponse.model_validate(
                 (
                     r := self.session.get(f"{TalkURL.MY_INFO}?{get_msec()}")
                 ).json()
