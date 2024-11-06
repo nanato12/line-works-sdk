@@ -7,7 +7,7 @@ on:
   push:
     branches:
       - develop
-      - feature/pypi
+  pull_request:
 
 jobs:
   setup:
@@ -27,7 +27,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Update TestPyPi VERSION
-        if: ${{ github.event_name == 'push' }}
+        if: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
         run: |
           echo "$(cat VERSION).dev$(date +'%Y%m%d%H%M')" > VERSION
 
@@ -42,7 +42,7 @@ jobs:
           path: dist/*
 
   pypi:
-    if: ${{ github.event_name == 'release' }}
+    if: ${{ github.event_name == 'release' || github.event_name == 'push' }}
     needs: setup
     runs-on: ubuntu-latest
     environment:
@@ -61,7 +61,7 @@ jobs:
           password: ${{ secrets.PYPI_TOKEN }}
 
   test-pypi:
-    if: ${{ github.event_name == 'push' }}
+    if: ${{ github.event_name == 'pull_request' }}
     needs: setup
     runs-on: ubuntu-latest
     environment:
