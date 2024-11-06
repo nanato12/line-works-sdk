@@ -8,8 +8,6 @@ on:
     branches:
       - develop
       - feature/pypi
-    # paths:
-    #   - VERSION
 
 jobs:
   setup:
@@ -27,6 +25,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements-dev.txt
           pip install -r requirements.txt
+
+      - name: Update TestPyPi VERSION
+        if: ${{ github.event_name == 'push' }}
+        run: |
+          echo "$(cat VERSION).dev$(date +'%Y%m%d%H%M')" > VERSION
 
       - name: Build
         run: |
@@ -70,9 +73,6 @@ jobs:
         with:
           name: build-package
           path: dist/
-
-      - name: ls
-        run: ls
 
       - name: Publish package to TestPyPI
         uses: pypa/gh-action-pypi-publish@release/v1
