@@ -21,3 +21,19 @@ fmt:
 	ruff --version
 	ruff format
 	ruff check --fix
+
+.PHONY: build
+build:
+	rm -rf build
+	rm -rf dist
+	rm -rf *.egg-info
+	python setup.py sdist
+	python setup.py bdist_wheel
+
+.PHONY: test-pypi
+test-pypi:
+	twine upload --repository pypitest dist/* --verbose
+
+.PHONY: pypi
+pypi:
+	twine upload --repository pypi dist/* --verbose
