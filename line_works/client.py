@@ -26,6 +26,9 @@ class LineWorks(BaseModel):
     password: str = Field(repr=False)
     keep_login: YesNoOption = Field(repr=False, default=YesNoOption.YES)
     remember_id: YesNoOption = Field(repr=False, default=YesNoOption.YES)
+    tenant_id: int = Field(init=False, default=0)
+    domain_id: int = Field(init=False, default=0)
+    contact_no: int = Field(init=False, default=0)
     session: Session = Field(init=False, repr=False, default_factory=Session)
 
     class Config:
@@ -38,10 +41,6 @@ class LineWorks(BaseModel):
     @property
     def cookie_path(self) -> str:
         return path_join(self.session_dir, "cookie.json")
-
-    @property
-    def domain_id(self) -> str:
-        return self.works_id.split("@")[-1]
 
     def model_post_init(self, __context: Any) -> None:
         makedirs(self.session_dir, exist_ok=True)
@@ -58,6 +57,11 @@ class LineWorks(BaseModel):
 
         if not r or r.status_code != 200:
             self.login_with_id()
+
+        my_info = self.get_my_info()
+        self.tenant_id = my_info.tenant_id
+        self.domain_id = my_info.domain_id
+        self.contact_no = my_info.contact_no
 
         logger.info(f"login success: {self!r}")
 
