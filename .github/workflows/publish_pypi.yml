@@ -8,8 +8,8 @@ on:
     branches:
       - develop
       - feature/pypi
-    paths:
-      - VERSION
+    # paths:
+    #   - VERSION
 
 jobs:
   setup:
