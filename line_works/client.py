@@ -2,10 +2,10 @@ import json
 from os import makedirs
 from os.path import exists
 from os.path import join as path_join
-from typing import Any, Optional
+from typing import Any
 
-from pydantic import BaseModel, Field
-from requests import HTTPError, JSONDecodeError, Response, Session
+from pydantic import BaseModel, Field, ValidationError
+from requests import HTTPError, JSONDecodeError, Session
 
 from line_works import config
 from line_works.decorator import save_cookie
@@ -46,19 +46,19 @@ class LineWorks(BaseModel):
         makedirs(self.session_dir, exist_ok=True)
         self.session.headers.update(config.HEADERS)
 
-        r: Optional[Response] = None
-
         if exists(self.cookie_path):
             # login with cookie
             with open(self.cookie_path) as j:
                 c = json.load(j)
             self.session.cookies.update(c)
-            r = self.session.get(TalkURL.HOST, allow_redirects=False)
 
-        if not r or r.status_code != 200:
+        try:
+            my_info = self.get_my_info()
+        except ValidationError as _:
+            self.session.cookies.clear()
             self.login_with_id()
+            my_info = self.get_my_info()
 
-        my_info = self.get_my_info()
         self.tenant_id = my_info.tenant_id
         self.domain_id = my_info.domain_id
         self.contact_no = my_info.contact_no
