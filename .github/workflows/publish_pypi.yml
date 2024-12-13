@@ -8,6 +8,12 @@ on:
     branches:
       - develop
   pull_request:
+    paths:
+      - "**.py"
+      - pyproject.toml
+      - requirements-dev.txt
+      - requirements.txt
+      - setup.cfg
 
 jobs:
   setup:
@@ -61,7 +67,7 @@ jobs:
           password: ${{ secrets.PYPI_TOKEN }}
 
   test-pypi:
-    if: ${{ github.event_name == 'pull_request' }}
+    if: ${{ github.event_name == 'pull_request' && github.actor != 'dependabot[bot]' }}
     needs: setup
     runs-on: ubuntu-latest
     environment:
