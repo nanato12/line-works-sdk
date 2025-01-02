@@ -18,6 +18,7 @@ logger = get_file_path_logger(__name__)
 class MQTTClient(BaseModel):
     cookies: RequestsCookieJar
     _ws: ClientConnection = PrivateAttr(default=None)
+    _notification_ids: list[str] = PrivateAttr(default_factory=list)
 
     class Config:
         arbitrary_types_allowed = True
@@ -60,9 +61,12 @@ class MQTTClient(BaseModel):
             if p.type == PacketType.PINGRESP:
                 return
 
-            logger.info(f"{p=}")
+            # logger.info(f"{p=}")
             if p.type == PacketType.PUBLISH:
-                logger.info(f"{p.message=}")
+                m = p.message
+                if m.notification_id not in self._notification_ids:
+                    logger.info(f"{p.message=}")
+                    self._notification_ids.append(m.notification_id)
         except LineWorksMQTTException as e:
             logger.error(
                 "Error while handling binary message. "
