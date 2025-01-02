@@ -99,3 +99,21 @@ class LineWorks(BaseModel):
             raise GetMyInfoException(f"{res=}")
 
         return res
+
+    def send_message(self, to: str, text: str) -> None:
+        r = self.session.post(
+            TalkURL.SEND_MESSAGE,
+            json={
+                "serviceId": "works",
+                "channelNo": to,
+                "tempMessageId": 733428260,
+                "caller": {
+                    "domainId": self.domain_id,
+                    "userNo": self.contact_no,
+                },
+                "extras": "",
+                "content": text,
+                "type": 1,
+            },
+        )
+        print(r)
