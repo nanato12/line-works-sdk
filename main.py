@@ -1,3 +1,4 @@
+import asyncio
 import logging
 from logging import StreamHandler, basicConfig
 from logging.handlers import TimedRotatingFileHandler
@@ -34,8 +35,9 @@ if __name__ == "__main__":
         ],
     )
 
-    logger.info("hello.")
-
     works = LineWorks(works_id=WORKS_ID, password=PASSWORD)
+
     my_info = works.get_my_info()
     logger.info(f"{my_info=}")
+
+    asyncio.run(works.trace())
