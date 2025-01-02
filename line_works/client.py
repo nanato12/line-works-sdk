@@ -11,7 +11,6 @@ from line_works import config
 from line_works.decorator import save_cookie
 from line_works.enums.yes_no_option import YesNoOption
 from line_works.exceptions import GetMyInfoException, LoginException
-from line_works.mqtt.client import MQTTClient
 from line_works.requests.login import LoginRequest
 from line_works.responses.get_my_info import GetMyInfoResponse
 from line_works.urls.auth import AuthURL
@@ -83,10 +82,6 @@ class LineWorks(BaseModel):
             r.raise_for_status()
         except HTTPError as e:
             raise LoginException(e)
-
-    async def trace(self) -> None:
-        w = MQTTClient(cookies=self.session.cookies)
-        await w.connect()
 
     def get_my_info(self) -> GetMyInfoResponse:
         try:

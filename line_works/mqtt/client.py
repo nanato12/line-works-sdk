@@ -3,9 +3,9 @@ from ssl import create_default_context
 
 import websockets
 from pydantic import BaseModel, PrivateAttr
-from requests.cookies import RequestsCookieJar
 from websockets.asyncio.client import ClientConnection
 
+from line_works.client import LineWorks
 from line_works.mqtt import config, packets
 from line_works.mqtt.enums.packet_type import PacketType
 from line_works.mqtt.exceptions import LineWorksMQTTException
@@ -16,7 +16,7 @@ logger = get_file_path_logger(__name__)
 
 
 class MQTTClient(BaseModel):
-    cookies: RequestsCookieJar
+    works: LineWorks
     _ws: ClientConnection = PrivateAttr(default=None)
     _notification_ids: list[str] = PrivateAttr(default_factory=list)
 
@@ -25,7 +25,9 @@ class MQTTClient(BaseModel):
 
     @property
     def cookie_str(self) -> str:
-        return "; ".join(f"{k}={v}" for k, v in self.cookies.items())
+        return "; ".join(
+            f"{k}={v}" for k, v in self.works.session.cookies.items()
+        )
 
     async def connect(self) -> None:
         self._ws = await websockets.connect(
@@ -73,3 +75,6 @@ class MQTTClient(BaseModel):
                 "Failed to parse or process the MQTT packet.",
                 exc_info=e,
             )
+        except Exception as e:
+            logger.info(f"{p=}")
+            logger.error("error", exc_info=e)
