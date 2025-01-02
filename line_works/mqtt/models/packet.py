@@ -19,24 +19,33 @@ class MQTTPacket(BaseModel):
         if self.type != PacketType.PUBLISH:
             raise PacketParseException(
                 f"Expected packet type {PacketType.PUBLISH}, "
-                "but got {self.type}."
+                f"but got {self.type}."
             )
-        if not self.payload:
-            raise PacketParseException("Payload is missing or invalid.")
 
     @property
     def topic_length(self) -> int:
         self.validate_publish_payload()
+        if not self.payload:
+            raise PacketParseException("Payload is missing or invalid.")
+
         topic_length: int = struct.unpack("!H", self.payload[0:2])[0]
         return topic_length
 
     @property
     def topic_name(self) -> str:
+        self.validate_publish_payload()
+        if not self.payload:
+            raise PacketParseException("Payload is missing or invalid.")
+
         topic: str = self.payload[2 : 2 + self.topic_length].decode("utf-8")
         return topic
 
     @property
     def publish_payload(self) -> str:
+        self.validate_publish_payload()
+        if not self.payload:
+            raise PacketParseException("Payload is missing or invalid.")
+
         pos = 2 + self.topic_length
 
         qos = (self.flags & 0x06) >> 1
@@ -50,7 +59,9 @@ class MQTTPacket(BaseModel):
 
     @property
     def message(self) -> NotificationMessage:
-        return NotificationMessage.model_validate_json(self.publish_payload)
+        if not self.publish_payload:
+            raise PacketParseException("Publish payload is empty.")
+        return NotificationMessage.model_validate_json(self.publish_payload)  # type: ignore
 
     @classmethod
     def parse_from_bytes(cls, data: bytes) -> Self:
