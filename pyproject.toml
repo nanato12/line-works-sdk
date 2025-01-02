@@ -15,7 +15,7 @@ unfixable = []
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
-"line_works/wqtt/config.py" = ["E501"]
+"line_works/config.py" = ["E501"]
 
 [tool.mypy]
 explicit_package_bases = true
