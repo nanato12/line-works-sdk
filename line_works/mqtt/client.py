@@ -1,6 +1,4 @@
 import asyncio
-import json
-import struct
 from ssl import create_default_context
 
 import websockets
@@ -9,6 +7,12 @@ from requests.cookies import RequestsCookieJar
 from websockets.asyncio.client import ClientConnection
 
 from line_works.mqtt import config, packets
+from line_works.mqtt.enums.packet_type import PacketType
+from line_works.mqtt.exceptions import LineWorksMQTTException
+from line_works.mqtt.models.packet import MQTTPacket
+from logger import get_file_path_logger
+
+logger = get_file_path_logger(__name__)
 
 
 class MQTTClient(BaseModel):
@@ -46,10 +50,22 @@ class MQTTClient(BaseModel):
         while True:
             message = await self._ws.recv()
             if isinstance(message, bytes):
-                await self._handle_binary_message(message)
+                await self.__handle_binary_message(message)
             else:
-                print(f"テキストメッセージを受信: {message}")
+                logger.debug(f"Received a non-binary message: {message}")
 
-    async def _handle_binary_message(self, message: bytes) -> None:
-        # TODO: 実装
-        pass
+    async def __handle_binary_message(self, message: bytes) -> None:
+        try:
+            p = MQTTPacket.parse_from_bytes(message)
+            if p.type == PacketType.PINGRESP:
+                return
+
+            logger.info(f"{p=}")
+            if p.type == PacketType.PUBLISH:
+                logger.info(f"{p.message=}")
+        except LineWorksMQTTException as e:
+            logger.error(
+                "Error while handling binary message. "
+                "Failed to parse or process the MQTT packet.",
+                exc_info=e,
+            )
