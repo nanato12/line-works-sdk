@@ -32,15 +32,15 @@ class WMQTTClient(BaseModel):
         await self._ws.send(packets.CONNECTION_PACKET)
 
         async with asyncio.TaskGroup() as tg:
-            tg.create_task(self._send_pingreq())
-            tg.create_task(self.listen())
+            tg.create_task(self.__send_pingreq())
+            tg.create_task(self.__listen())
 
-    async def _send_pingreq(self) -> None:
+    async def __send_pingreq(self) -> None:
         while True:
             await asyncio.sleep(config.KEEPALIVE_INTERVAL_SEC)
             await self._ws.send(packets.PINGREQ_PACKET)
 
-    async def listen(self) -> None:
+    async def __listen(self) -> None:
         while True:
             message = await self._ws.recv()
             if isinstance(message, bytes):
