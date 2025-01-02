@@ -134,3 +134,4 @@ dmypy.json
 # app
 .sessions
 sample.py
+wmqtt.py

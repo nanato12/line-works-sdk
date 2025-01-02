@@ -16,6 +16,7 @@ from line_works.responses.get_my_info import GetMyInfoResponse
 from line_works.urls.auth import AuthURL
 from line_works.urls.talk import TalkURL
 from line_works.utils import get_msec
+from line_works.wqtt.client import WMQTTClient
 from logger import get_file_path_logger
 
 logger = get_file_path_logger(__name__)
@@ -82,6 +83,10 @@ class LineWorks(BaseModel):
             r.raise_for_status()
         except HTTPError as e:
             raise LoginException(e)
+
+    async def trace(self) -> None:
+        w = WMQTTClient(cookies=self.session.cookies)
+        await w.connect()
 
     def get_my_info(self) -> GetMyInfoResponse:
         try:
