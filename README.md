@@ -12,6 +12,14 @@ Python 3.11+
 $ pip install line-works-sdk
 ```
 
+dev version
+
+<https://pypi.org/project/line-works-sdk/#history>
+
+```sh
+$ pip install line-works-sdk==x.x.devyyyymmddHHMM
+```
+
 ## Usage
 
 ```python
@@ -26,6 +34,9 @@ works = LineWorks(works_id=WORKS_ID, password=PASSWORD)
 
 my_info = works.get_my_info()
 print(f"{my_info=}")
+
+# trace websocket
+asyncio.run(works.trace())
 ```
 
 ## Contributors
