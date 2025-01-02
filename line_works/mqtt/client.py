@@ -1,4 +1,6 @@
 import asyncio
+import json
+import struct
 from ssl import create_default_context
 
 import websockets
@@ -6,10 +8,10 @@ from pydantic import BaseModel, PrivateAttr
 from requests.cookies import RequestsCookieJar
 from websockets.asyncio.client import ClientConnection
 
-from line_works.wqtt import config, packets
+from line_works.mqtt import config, packets
 
 
-class WMQTTClient(BaseModel):
+class MQTTClient(BaseModel):
     cookies: RequestsCookieJar
     _ws: ClientConnection = PrivateAttr(default=None)
 
