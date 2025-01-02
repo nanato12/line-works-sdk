@@ -5,7 +5,9 @@ from os import environ, makedirs
 
 from dotenv import load_dotenv
 
+from hooks.receive_publish_message import receive_publish_message
 from line_works.client import LineWorks
+from line_works.mqtt.enums.packet_type import PacketType
 from line_works.tracer import LineWorksTracer
 from logger import get_file_path_logger
 
@@ -41,4 +43,5 @@ if __name__ == "__main__":
     logger.info(f"{my_info=}")
 
     tracer = LineWorksTracer(works=works)
+    tracer.add_trace_func(PacketType.PUBLISH, receive_publish_message)
     tracer.trace()
