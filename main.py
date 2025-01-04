@@ -7,9 +7,9 @@ from dotenv import load_dotenv
 
 from hooks.receive_publish_packet import receive_publish_packet
 from line_works.client import LineWorks
+from line_works.logger import get_file_path_logger
 from line_works.mqtt.enums.packet_type import PacketType
 from line_works.tracer import LineWorksTracer
-from logger import get_file_path_logger
 
 LOG_DIRECTORY = "logs"
 makedirs(LOG_DIRECTORY, exist_ok=True)

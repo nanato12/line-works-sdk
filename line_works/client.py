@@ -16,6 +16,7 @@ from line_works.exceptions import (
     LoginException,
     SendMessageException,
 )
+from line_works.logger import get_file_path_logger
 from line_works.models.caller import Caller
 from line_works.requests.login import LoginRequest
 from line_works.requests.send_message import SendMessageRequest
@@ -23,7 +24,6 @@ from line_works.responses.get_my_info import GetMyInfoResponse
 from line_works.responses.send_message import SendMessageResponse
 from line_works.urls.auth import AuthURL
 from line_works.urls.talk import TalkURL
-from logger import get_file_path_logger
 
 logger = get_file_path_logger(__name__)
 
