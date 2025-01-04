@@ -10,7 +10,10 @@ from line_works.client import LineWorks
 from line_works.logger import get_file_path_logger
 from line_works.mqtt import config, packets
 from line_works.mqtt.enums.packet_type import PacketType
-from line_works.mqtt.exceptions import LineWorksMQTTException
+from line_works.mqtt.exceptions import (
+    LineWorksMQTTException,
+    PacketParseException,
+)
 from line_works.mqtt.models.packet import MQTTPacket
 
 logger = get_file_path_logger(__name__)
@@ -76,13 +79,17 @@ class MQTTClient(BaseModel):
                 return
 
             if packet.type == PacketType.PUBLISH:
-                m = packet.message
-                if m.notification_id in self._notification_ids:
-                    return
-                elif m.notification_id:
-                    self._notification_ids.append(m.notification_id)
+                try:
+                    m = packet.message
+                    if m.notification_id in self._notification_ids:
+                        return
+                    elif m.notification_id:
+                        self._notification_ids.append(m.notification_id)
+                except PacketParseException:
+                    pass
 
             logger.debug(f"{packet=}")
+
             if f := self._trace_func.get(packet.type):
                 f(self.works, packet)
         except LineWorksMQTTException as e:
