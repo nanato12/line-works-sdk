@@ -8,4 +8,3 @@ def receive_publish_packet(w: LineWorks, p: MQTTPacket) -> None:
     if m.loc_args1.startswith("/"):
         r = w.send_message(m.channel_no, str(m.loc_args1))
         print(f"{r=}")
-        1 / 0
