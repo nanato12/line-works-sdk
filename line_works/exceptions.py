@@ -8,3 +8,7 @@ class LoginException(LineWorksException):
 
 class GetMyInfoException(LineWorksException):
     pass
+
+
+class SendMessageException(LineWorksException):
+    pass
