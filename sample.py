@@ -1,13 +1,7 @@
-from os import environ
-
-from dotenv import load_dotenv
-
 from line_works.client import LineWorks
 from line_works.mqtt.enums.packet_type import PacketType
-from line_works.tracer import LineWorksTracer
-
-from line_works.client import LineWorks
 from line_works.mqtt.models.packet import MQTTPacket
+from line_works.tracer import LineWorksTracer
 
 
 def receive_publish_packet(w: LineWorks, p: MQTTPacket) -> None:
@@ -16,14 +10,13 @@ def receive_publish_packet(w: LineWorks, p: MQTTPacket) -> None:
     if not m.channel_no:
         return
 
-    if m.loc_args1.startswith("/"):
-        r = w.send_message(m.channel_no, str(m.loc_args1))
+    if m.loc_args1 == "test":
+        r = w.send_message(m.channel_no, "ok")
         print(f"{r=}")
 
-load_dotenv(".env", verbose=True)
 
-WORKS_ID = environ["WORKS_ID"]
-PASSWORD = environ["PASSWORD"]
+WORKS_ID = "YOUR WORKS ID"
+PASSWORD = "YOUR WORKS PASSWORD"
 
 works = LineWorks(works_id=WORKS_ID, password=PASSWORD)
 

@@ -8,6 +8,6 @@ def receive_publish_packet(w: LineWorks, p: MQTTPacket) -> None:
     if not m.channel_no:
         return
 
-    if m.loc_args1.startswith("/"):
-        r = w.send_message(m.channel_no, str(m.loc_args1))
+    if m.loc_args1 == "test":
+        r = w.send_message(m.channel_no, "ok")
         print(f"{r=}")

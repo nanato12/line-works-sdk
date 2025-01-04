@@ -23,21 +23,37 @@ $ pip install line-works-sdk==x.x.devyyyymmddHHMM
 ## Usage
 
 ```python
-from line_works import LineWorks
+from line_works.client import LineWorks
+from line_works.mqtt.enums.packet_type import PacketType
+from line_works.mqtt.models.packet import MQTTPacket
+from line_works.tracer import LineWorksTracer
+
+
+def receive_publish_packet(w: LineWorks, p: MQTTPacket) -> None:
+    m = p.message
+
+    if not m.channel_no:
+        return
+
+    if m.loc_args1 == "test":
+        r = w.send_message(m.channel_no, "ok")
+        print(f"{r=}")
 
 
 WORKS_ID = "YOUR WORKS ID"
 PASSWORD = "YOUR WORKS PASSWORD"
 
 works = LineWorks(works_id=WORKS_ID, password=PASSWORD)
-# [INFO] line_works/client:66 login success: LineWorks(works_id='xxxxx', tenant_id=xxxxxxxx, domain_id=xxxxxxxx, contact_no=xxxxxxxxxxxxx)
 
 my_info = works.get_my_info()
 print(f"{my_info=}")
 
-# trace websocket
-asyncio.run(works.trace())
+tracer = LineWorksTracer(works=works)
+tracer.add_trace_func(PacketType.PUBLISH, receive_publish_packet)
+tracer.trace()
 ```
+
+![sample_usage](./src/usage.png)
 
 ## Contributors
 
