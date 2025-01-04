@@ -15,7 +15,10 @@ class SentMessage(BaseModel):
     message_type_code: int = Field(alias="messageTypeCode")
     message_status_type: str = Field(alias="messageStatusType")
     message_status_type_code: int = Field(alias="messageStatusTypeCode")
-    extras: Optional[str] = None
+    extras: str = Field(default="")
     tid: int
     create_time: int = Field(alias="createTime")
     update_time: int = Field(alias="updateTime")
+
+    class Config:
+        populate_by_name = True
