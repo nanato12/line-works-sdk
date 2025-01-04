@@ -1,7 +1,7 @@
 [tool.ruff]
 line-length = 79
 show-fixes = true
-extend-exclude = ["wmqtt.py", "sample.py"]
+extend-exclude = ["wmqtt.py"]
 
 [tool.ruff.format]
 docstring-code-format = false
@@ -25,4 +25,4 @@ disallow_untyped_calls = true
 disallow_untyped_defs = true
 ignore_missing_imports = true
 follow_imports = "skip"
-exclude = ["^venv/*", "wmqtt.py", "sample.py"]
+exclude = ["^venv/*", "wmqtt.py"]
