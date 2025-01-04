@@ -10,7 +10,6 @@ from line_works.client import LineWorks
 from line_works.mqtt import config, packets
 from line_works.mqtt.enums.packet_type import PacketType
 from line_works.mqtt.exceptions import LineWorksMQTTException
-from line_works.mqtt.models.message import NotificationMessage
 from line_works.mqtt.models.packet import MQTTPacket
 from logger import get_file_path_logger
 
@@ -19,9 +18,9 @@ logger = get_file_path_logger(__name__)
 
 class MQTTClient(BaseModel):
     works: LineWorks
-    _trace_func: dict[
-        PacketType, Callable[[LineWorks, NotificationMessage], None]
-    ] = PrivateAttr(default_factory=dict)
+    _trace_func: dict[PacketType, Callable[[LineWorks, MQTTPacket], None]] = (
+        PrivateAttr(default_factory=dict)
+    )
     _ws: ClientConnection = PrivateAttr(default=None)
     _notification_ids: list[str] = PrivateAttr(default_factory=list)
 
@@ -37,7 +36,7 @@ class MQTTClient(BaseModel):
     def add_trace_func(
         self,
         packet_type: PacketType,
-        f: Callable[[LineWorks, NotificationMessage], None],
+        f: Callable[[LineWorks, MQTTPacket], None],
     ) -> None:
         self._trace_func[packet_type] = f
 
@@ -71,19 +70,21 @@ class MQTTClient(BaseModel):
 
     async def __handle_binary_message(self, message: bytes) -> None:
         try:
-            p = MQTTPacket.parse_from_bytes(message)
-            if p.type == PacketType.PINGRESP:
+            packet = MQTTPacket.parse_from_bytes(message)
+
+            if packet.type == PacketType.PINGRESP:
                 return
 
-            logger.debug(f"{p=}")
-            if p.type == PacketType.PUBLISH:
-                m = p.message
+            if packet.type == PacketType.PUBLISH:
+                m = packet.message
                 if m.notification_id in self._notification_ids:
                     return
-                logger.debug(f"{p.message=}")
-                self._notification_ids.append(m.notification_id)
+                elif m.notification_id:
+                    self._notification_ids.append(m.notification_id)
 
-                self._trace_func[p.type](self.works, p.message)
+            logger.debug(f"{packet=}")
+            if f := self._trace_func.get(packet.type):
+                f(self.works, packet)
         except LineWorksMQTTException as e:
             logger.error(
                 "Error while handling binary message. "
