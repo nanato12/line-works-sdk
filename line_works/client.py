@@ -2,12 +2,13 @@ import json
 from os import makedirs
 from os.path import exists
 from os.path import join as path_join
-from typing import Any
+from typing import Any, Type
 
 from pydantic import BaseModel, Field, PrivateAttr, ValidationError
 from requests import HTTPError, JSONDecodeError, Session
 
 from line_works import config
+from line_works.constants import RequestType
 from line_works.decorator import save_cookie
 from line_works.enums.yes_no_option import YesNoOption
 from line_works.exceptions import (
@@ -76,6 +77,24 @@ class LineWorks(BaseModel):
 
         logger.info(f"login success: {self!r}")
 
+    def _request_with_error_handling(
+        self,
+        method: str,
+        url: str,
+        ex: Type[Exception],
+        **kwargs: dict[str, Any],
+    ) -> dict[str, Any]:
+        try:
+            r = self.session.request(method, url, **kwargs)
+            r.raise_for_status()
+            return r.json()
+        except HTTPError as e:
+            raise ex(f"HTTP error: {e}") from e
+        except JSONDecodeError as e:
+            raise ex(f"Invalid response: [{r.status_code}] {r.url}") from e
+        except Exception as e:
+            raise ex(f"Unexpected error: {e}") from e
+
     @save_cookie
     def login_with_id(self) -> None:
         self.session.get(AuthURL.LOGIN)
@@ -95,40 +114,20 @@ class LineWorks(BaseModel):
             raise LoginException(e)
 
     def get_my_info(self) -> GetMyInfoResponse:
-        try:
-            res: GetMyInfoResponse = GetMyInfoResponse.model_validate(
-                (
-                    r := self.session.get(f"{TalkURL.MY_INFO}?{get_msec()}")
-                ).json()
-            )
-            r.raise_for_status()
-        except JSONDecodeError:
-            raise GetMyInfoException(
-                f"Invalid response: [{r.status_code}] " f"{r.url}"
-            )
-        except HTTPError:
-            raise GetMyInfoException(f"{res=}")
-
-        return res
+        d = self._request_with_error_handling(
+            RequestType.GET,
+            TalkURL.MY_INFO,
+            GetMyInfoException,
+        )
+        return GetMyInfoResponse.model_validate(d)
 
     def send_message(self, to: int, text: str) -> SendMessageResponse:
-        try:
-            res: SendMessageResponse = SendMessageResponse.model_validate(
-                (
-                    r := self.session.post(
-                        TalkURL.SEND_MESSAGE,
-                        json=SendMessageRequest.text_message(
-                            to, text, self._caller
-                        ).model_dump(by_alias=True),
-                    )
-                ).json()
-            )
-            r.raise_for_status()
-        except JSONDecodeError:
-            raise SendMessageException(
-                f"Invalid response: [{r.status_code}] " f"{r.url}"
-            )
-        except HTTPError:
-            raise SendMessageException(f"{res=}")
-
-        return res
+        d = self._request_with_error_handling(
+            RequestType.POST,
+            TalkURL.SEND_MESSAGE,
+            SendMessageException,
+            json=SendMessageRequest.text_message(
+                to, text, self._caller
+            ).model_dump(by_alias=True),
+        )
+        return SendMessageResponse.model_validate(d)
