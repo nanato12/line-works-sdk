@@ -54,19 +54,21 @@ class LineWorks(BaseModel):
         makedirs(self.session_dir, exist_ok=True)
         self.session.headers.update(config.HEADERS)
 
-        if exists(self.cookie_path):
+        if not exists(self.cookie_path):
+            self.login_with_id()
+        else:
             # login with cookie
             with open(self.cookie_path) as j:
                 c = json.load(j)
             self.session.cookies.update(c)
 
-        try:
-            my_info = self.get_my_info()
-        except ValidationError:
-            self.session.cookies.clear()
-            self.login_with_id()
-            my_info = self.get_my_info()
+            try:
+                my_info = self.get_my_info()
+            except Exception:
+                self.session.cookies.clear()
+                self.login_with_id()
 
+        my_info = self.get_my_info()
         self.tenant_id = my_info.tenant_id
         self.domain_id = my_info.domain_id
         self.contact_no = my_info.contact_no
