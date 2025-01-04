@@ -23,7 +23,6 @@ from line_works.responses.get_my_info import GetMyInfoResponse
 from line_works.responses.send_message import SendMessageResponse
 from line_works.urls.auth import AuthURL
 from line_works.urls.talk import TalkURL
-from line_works.utils import get_msec
 from logger import get_file_path_logger
 
 logger = get_file_path_logger(__name__)
@@ -82,12 +81,12 @@ class LineWorks(BaseModel):
         method: str,
         url: str,
         ex: Type[Exception],
-        **kwargs: dict[str, Any],
+        **kwargs: Any,
     ) -> dict[str, Any]:
         try:
             r = self.session.request(method, url, **kwargs)
             r.raise_for_status()
-            return r.json()
+            return r.json()  # type: ignore
         except HTTPError as e:
             raise ex(f"HTTP error: {e}") from e
         except JSONDecodeError as e:
@@ -119,7 +118,7 @@ class LineWorks(BaseModel):
             TalkURL.MY_INFO,
             GetMyInfoException,
         )
-        return GetMyInfoResponse.model_validate(d)
+        return GetMyInfoResponse.model_validate(d)  # type: ignore
 
     def send_message(self, to: int, text: str) -> SendMessageResponse:
         d = self._request_with_error_handling(
@@ -130,4 +129,4 @@ class LineWorks(BaseModel):
                 to, text, self._caller
             ).model_dump(by_alias=True),
         )
-        return SendMessageResponse.model_validate(d)
+        return SendMessageResponse.model_validate(d)  # type: ignore

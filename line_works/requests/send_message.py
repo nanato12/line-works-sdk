@@ -19,7 +19,7 @@ class SendMessageRequest(BaseModel):
         populate_by_name = True
 
     @classmethod
-    def text_message(cls, channel_no: int, text: str, caller=Caller) -> Self:
+    def text_message(cls, channel_no: int, text: str, caller: Caller) -> Self:
         return cls(
             channel_no=channel_no,
             content=text,
