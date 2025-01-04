@@ -4,15 +4,22 @@ from os.path import exists
 from os.path import join as path_join
 from typing import Any
 
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, Field, PrivateAttr, ValidationError
 from requests import HTTPError, JSONDecodeError, Session
 
 from line_works import config
 from line_works.decorator import save_cookie
 from line_works.enums.yes_no_option import YesNoOption
-from line_works.exceptions import GetMyInfoException, LoginException
+from line_works.exceptions import (
+    GetMyInfoException,
+    LoginException,
+    SendMessageException,
+)
+from line_works.models.caller import Caller
 from line_works.requests.login import LoginRequest
+from line_works.requests.send_message import SendMessageRequest
 from line_works.responses.get_my_info import GetMyInfoResponse
+from line_works.responses.send_message import SendMessageResponse
 from line_works.urls.auth import AuthURL
 from line_works.urls.talk import TalkURL
 from line_works.utils import get_msec
@@ -30,6 +37,7 @@ class LineWorks(BaseModel):
     domain_id: int = Field(init=False, default=0)
     contact_no: int = Field(init=False, default=0)
     session: Session = Field(init=False, repr=False, default_factory=Session)
+    _caller: Caller = PrivateAttr()
 
     class Config:
         arbitrary_types_allowed = True
@@ -54,7 +62,7 @@ class LineWorks(BaseModel):
 
         try:
             my_info = self.get_my_info()
-        except ValidationError as _:
+        except ValidationError:
             self.session.cookies.clear()
             self.login_with_id()
             my_info = self.get_my_info()
@@ -62,6 +70,9 @@ class LineWorks(BaseModel):
         self.tenant_id = my_info.tenant_id
         self.domain_id = my_info.domain_id
         self.contact_no = my_info.contact_no
+        self._caller = Caller(
+            domain_id=self.domain_id, user_no=self.contact_no
+        )
 
         logger.info(f"login success: {self!r}")
 
@@ -100,20 +111,24 @@ class LineWorks(BaseModel):
 
         return res
 
-    def send_message(self, to: str, text: str) -> None:
-        r = self.session.post(
-            TalkURL.SEND_MESSAGE,
-            json={
-                "serviceId": "works",
-                "channelNo": to,
-                "tempMessageId": 733428260,
-                "caller": {
-                    "domainId": self.domain_id,
-                    "userNo": self.contact_no,
-                },
-                "extras": "",
-                "content": text,
-                "type": 1,
-            },
-        )
-        print(r)
+    def send_message(self, to: int, text: str) -> SendMessageResponse:
+        try:
+            res: SendMessageResponse = SendMessageResponse.model_validate(
+                (
+                    r := self.session.post(
+                        TalkURL.SEND_MESSAGE,
+                        json=SendMessageRequest.text_message(
+                            to, text, self._caller
+                        ).model_dump(by_alias=True),
+                    )
+                ).json()
+            )
+            r.raise_for_status()
+        except JSONDecodeError:
+            raise SendMessageException(
+                f"Invalid response: [{r.status_code}] " f"{r.url}"
+            )
+        except HTTPError:
+            raise SendMessageException(f"{res=}")
+
+        return res
