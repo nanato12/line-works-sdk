@@ -15,7 +15,6 @@ from line_works.mqtt.exceptions import (
     PacketParseException,
 )
 from line_works.mqtt.models.packet import MQTTPacket
-from line_works.mqtt.models.payload.message import MessagePayload
 
 logger = get_file_path_logger(__name__)
 

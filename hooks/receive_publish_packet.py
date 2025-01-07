@@ -12,7 +12,6 @@ def receive_publish_packet(w: LineWorks, p: MQTTPacket) -> None:
     if not payload.channel_no:
         return
 
-
     if payload.loc_args1 == "test":
         r = w.send_message(payload.channel_no, "ok")
         print(f"{r=}")

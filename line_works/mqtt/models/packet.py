@@ -76,7 +76,7 @@ class MQTTPacket(BaseModel):
         if not (p_model := NOTIFICATION_TYPE_MODEL_MAPPING.get(n_type)):
             raise PacketParseException(f"invalid notification type: {n_type}")
 
-        return p_model.model_validate(self.publish_payload)
+        return p_model.model_validate(self.publish_payload)  # type: ignore
 
     @classmethod
     def parse_from_bytes(cls, data: bytes) -> Self:
