@@ -1,13 +1,18 @@
 from line_works.client import LineWorks
 from line_works.mqtt.models.packet import MQTTPacket
+from line_works.mqtt.models.payload.message import MessagePayload
 
 
 def receive_publish_packet(w: LineWorks, p: MQTTPacket) -> None:
-    m = p.message
+    payload = p.payload
 
-    if not m.channel_no:
+    if not isinstance(payload, MessagePayload):
         return
 
-    if m.loc_args1 == "test":
-        r = w.send_message(m.channel_no, "ok")
+    if not payload.channel_no:
+        return
+
+
+    if payload.loc_args1 == "test":
+        r = w.send_message(payload.channel_no, "ok")
         print(f"{r=}")
