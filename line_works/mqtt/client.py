@@ -85,12 +85,10 @@ class MQTTClient(BaseModel):
                         return
                     elif p.unique_id:
                         self._unique_ids.append(p.unique_id)
-                except PacketParseException:
-                    logger.info(f"{packet.publish_payload=}")
-                else:
-                    logger.info(f"{p=}")
+                except PacketParseException as e:
+                    logger.error("packet parse error", exc_info=e)
 
-            # logger.info(f"{packet=}")
+            logger.debug(f"{packet=}")
 
             if f := self._trace_func.get(packet.type):
                 f(self.works, packet)
