@@ -1,18 +1,22 @@
+import json
 import struct
-from typing import Optional, Self
+from typing import Any, Optional, Self
 
 from pydantic import BaseModel, Field
 
 from line_works.mqtt.enums.packet_type import PacketType
 from line_works.mqtt.exceptions import PacketParseException
-from line_works.mqtt.models.message import NotificationMessage
+from line_works.mqtt.models.payload import (
+    NOTIFICATION_TYPE_MODEL_MAPPING,
+    PayloadTypes,
+)
 
 
 class MQTTPacket(BaseModel):
     type: PacketType
     flags: int
     remaining_length: int
-    payload: Optional[bytes]
+    raw_payload: Optional[bytes]
     raw_packet: bytes = Field(repr=False)
 
     def validate_publish_payload(self) -> None:
@@ -25,43 +29,54 @@ class MQTTPacket(BaseModel):
     @property
     def topic_length(self) -> int:
         self.validate_publish_payload()
-        if not self.payload:
+        if not self.raw_payload:
             raise PacketParseException("Payload is missing or invalid.")
 
-        topic_length: int = struct.unpack("!H", self.payload[0:2])[0]
+        topic_length: int = struct.unpack("!H", self.raw_payload[0:2])[0]
         return topic_length
 
     @property
     def topic_name(self) -> str:
         self.validate_publish_payload()
-        if not self.payload:
+        if not self.raw_payload:
             raise PacketParseException("Payload is missing or invalid.")
 
-        topic: str = self.payload[2 : 2 + self.topic_length].decode("utf-8")
+        topic: str = self.raw_payload[2 : 2 + self.topic_length].decode(
+            "utf-8"
+        )
         return topic
 
     @property
-    def publish_payload(self) -> str:
+    def publish_payload(self) -> dict[str, Any]:
         self.validate_publish_payload()
-        if not self.payload:
+        if not self.raw_payload:
             raise PacketParseException("Payload is missing or invalid.")
 
         pos = 2 + self.topic_length
 
         qos = (self.flags & 0x06) >> 1
         if qos > 0:
-            if len(self.payload) < pos + 2:
+            if len(self.raw_payload) < pos + 2:
                 raise PacketParseException("Packet too short for QoS > 0")
             pos += 2
 
-        payload = self.payload[pos:]
-        return payload.decode("utf-8")
+        payload = self.raw_payload[pos:].decode("utf-8")
+        if payload:
+            j: dict[str, Any] = json.loads(payload)
+            return j
+
+        return {}
 
     @property
-    def message(self) -> NotificationMessage:
-        if not self.publish_payload:
-            raise PacketParseException("Publish payload is empty.")
-        return NotificationMessage.model_validate_json(self.publish_payload)  # type: ignore
+    def payload(self) -> PayloadTypes:
+        p = self.publish_payload
+        if not (n_type := p.get("nType")):
+            raise PacketParseException(f"invalid payload: {p}")
+
+        if not (p_model := NOTIFICATION_TYPE_MODEL_MAPPING.get(n_type)):
+            raise PacketParseException(f"invalid notification type: {n_type}")
+
+        return p_model.model_validate(self.publish_payload)
 
     @classmethod
     def parse_from_bytes(cls, data: bytes) -> Self:
@@ -86,7 +101,7 @@ class MQTTPacket(BaseModel):
             if byte & 0x80 == 0:
                 break
 
-        payload = (
+        raw_payload = (
             data[pos : pos + remaining_length]
             if remaining_length > 0
             else None
@@ -96,6 +111,6 @@ class MQTTPacket(BaseModel):
             type=PacketType(packet_type),
             flags=flags,
             remaining_length=remaining_length,
-            payload=payload,
+            raw_payload=raw_payload,
             raw_packet=data,
         )
