@@ -15,6 +15,7 @@ from line_works.mqtt.exceptions import (
     PacketParseException,
 )
 from line_works.mqtt.models.packet import MQTTPacket
+from line_works.mqtt.models.payload.message import MessagePayload
 
 logger = get_file_path_logger(__name__)
 
@@ -25,7 +26,7 @@ class MQTTClient(BaseModel):
         PrivateAttr(default_factory=dict)
     )
     _ws: ClientConnection = PrivateAttr(default=None)
-    _notification_ids: list[str] = PrivateAttr(default_factory=list)
+    _unique_ids: list[str] = PrivateAttr(default_factory=list)
 
     class Config:
         arbitrary_types_allowed = True
@@ -80,15 +81,17 @@ class MQTTClient(BaseModel):
 
             if packet.type == PacketType.PUBLISH:
                 try:
-                    m = packet.message
-                    if m.notification_id in self._notification_ids:
+                    p = packet.payload
+                    if p.unique_id in self._unique_ids:
                         return
-                    elif m.notification_id:
-                        self._notification_ids.append(m.notification_id)
+                    elif p.unique_id:
+                        self._unique_ids.append(p.unique_id)
                 except PacketParseException:
-                    pass
+                    logger.info(f"{packet.publish_payload=}")
+                else:
+                    logger.info(f"{p=}")
 
-            logger.debug(f"{packet=}")
+            # logger.info(f"{packet=}")
 
             if f := self._trace_func.get(packet.type):
                 f(self.works, packet)
