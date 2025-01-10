@@ -86,7 +86,7 @@ class MQTTClient(BaseModel):
                     elif p.unique_id:
                         self._unique_ids.append(p.unique_id)
                 except PacketParseException as e:
-                    logger.error("packet parse error", exc_info=e)
+                    logger.debug("packet parse error", exc_info=e)
 
             logger.debug(f"{packet=}")
 
