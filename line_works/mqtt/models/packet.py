@@ -57,7 +57,12 @@ class MQTTPacket(BaseModel):
         qos = (self.flags & 0x06) >> 1
         if qos > 0:
             if len(self.raw_payload) < pos + 2:
-                raise PacketParseException("Packet too short for QoS > 0")
+                raise PacketParseException(
+                    "Packet too short for QoS > 0: "
+                    f"expected at least {pos + 2} bytes, "
+                    f"but got {len(self.raw_payload)} bytes. "
+                    f"raw_payload: {self.raw_payload}"
+                )
             pos += 2
 
         payload = self.raw_payload[pos:].decode("utf-8")
