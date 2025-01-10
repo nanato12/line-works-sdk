@@ -61,7 +61,7 @@ class MQTTPacket(BaseModel):
                     "Packet too short for QoS > 0: "
                     f"expected at least {pos + 2} bytes, "
                     f"but got {len(self.raw_payload)} bytes. "
-                    f"raw_payload: {self.raw_payload}"
+                    f"raw_payload: {self.raw_payload.hex()}"
                 )
             pos += 2
 
