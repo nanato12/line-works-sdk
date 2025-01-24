@@ -1,3 +1,2 @@
 additionalProperties:
   packageName: line_works.openapi
-  ignoreFileOverride: openapi/.openapi-generator-ignore
