@@ -29,6 +29,7 @@ def receive_publish_packet(w: LineWorks, p: MQTTPacket) -> None:
 
         w.send_sticker_message(payload.channel_no, payload.sticker)
 
+
 WORKS_ID = "YOUR WORKS ID"
 PASSWORD = "YOUR WORKS PASSWORD"
 
