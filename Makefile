@@ -37,3 +37,13 @@ test-pypi:
 .PHONY: pypi
 pypi:
 	twine upload --repository pypi dist/* --verbose
+
+.PHONY: generate
+generate:
+	npx @openapitools/openapi-generator-cli generate \
+		-i openapi/openapi.yml \
+		-g python \
+		-o . \
+		-c openapi/config.yml \
+		--git-repo-id line-works-sdk \
+		--git-user-id nanato12
