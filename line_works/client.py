@@ -18,6 +18,7 @@ from line_works.exceptions import (
 )
 from line_works.logger import get_file_path_logger
 from line_works.models.caller import Caller
+from line_works.models.sticker import Sticker
 from line_works.requests.login import LoginRequest
 from line_works.requests.send_message import SendMessageRequest
 from line_works.responses.get_my_info import GetMyInfoResponse
@@ -120,13 +121,23 @@ class LineWorks(BaseModel):
         )
         return GetMyInfoResponse.model_validate(d)  # type: ignore
 
-    def send_message(self, to: int, text: str) -> SendMessageResponse:
+    def send_message(self, req: SendMessageRequest) -> SendMessageResponse:
         d = self._request_with_error_handling(
             RequestType.POST,
             TalkURL.SEND_MESSAGE,
             SendMessageException,
-            json=SendMessageRequest.text_message(
-                to, text, self._caller
-            ).model_dump(by_alias=True),
+            json=req.model_dump(by_alias=True),
         )
         return SendMessageResponse.model_validate(d)  # type: ignore
+
+    def send_text_message(self, to: int, text: str) -> SendMessageResponse:
+        return self.send_message(
+            SendMessageRequest.text_message(self._caller, to, text)
+        )
+
+    def send_sticker_message(
+        self, to: int, sticker: Sticker
+    ) -> SendMessageResponse:
+        return self.send_message(
+            SendMessageRequest.sticker_message(self._caller, to, sticker)
+        )
