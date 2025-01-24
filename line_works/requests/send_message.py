@@ -1,10 +1,10 @@
-import json
 from typing import Self
 
 from pydantic import BaseModel, Field
 
 from line_works.enums.message_type import MessageType
 from line_works.models.caller import Caller
+from line_works.models.sticker import Sticker
 
 
 class SendMessageRequest(BaseModel):
@@ -30,26 +30,11 @@ class SendMessageRequest(BaseModel):
 
     @classmethod
     def sticker_message(
-        cls,
-        caller: Caller,
-        channel_no: int,
-        package_id: str,
-        sticker_id: str,
-        sticker_option: str = "",
-        sticker_version: str = "",
-        sticker_type: str = "line",
+        cls, caller: Caller, channel_no: int, sticker: Sticker
     ) -> Self:
         return cls(
             channel_no=channel_no,
             caller=caller,
-            extras=json.dumps(
-                {
-                    "pkgVer": sticker_version,
-                    "pkgId": package_id,
-                    "stkId": sticker_id,
-                    "stkType": sticker_type,
-                    "stkOpt": sticker_option,
-                }
-            ),
+            extras=sticker.model_dump_json(by_alias=True),
             type=MessageType.STICKER,
         )
