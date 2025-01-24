@@ -42,10 +42,17 @@ def receive_publish_packet(w: LineWorks, p: MQTTPacket) -> None:
     print(f"{payload!r}")
 
     if payload.loc_args1 == "test":
-        w.send_message(payload.channel_no, "ok")
+        w.send_text_message(payload.channel_no, "ok")
 
     elif payload.loc_args1 == "/msg":
-        w.send_message(payload.channel_no, f"{payload!r}")
+        w.send_text_message(payload.channel_no, f"{payload!r}")
+
+    if payload.notification_type == NotificationType.NOTIFICATION_STICKER:
+        w.send_text_message(payload.channel_no, "スタンプ")
+        w.send_text_message(payload.channel_no, f"{payload.extras_dict=}")
+
+        e = payload.extras_dict
+        w.send_sticker_message(payload.channel_no, e["pkgId"], e["stkId"])
 
 
 WORKS_ID = "YOUR WORKS ID"
@@ -62,6 +69,8 @@ tracer.trace()
 ```
 
 ![sample_usage](https://github.com/user-attachments/assets/904eadeb-47be-4b48-b79f-b9aca761546b)
+
+![sample_usage_2](https://github.com/user-attachments/assets/0f3097c9-345c-4a74-b08a-9338efa8dc40)
 
 ## Contributors
 
