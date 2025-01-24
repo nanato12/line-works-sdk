@@ -1,3 +1,4 @@
+import json
 from typing import Optional
 
 from pydantic import Field
@@ -24,3 +25,7 @@ class MessagePayload(BadgePayload):
     @property
     def unique_id(self) -> str:
         return f"{self.loc_key}_{self.notification_id}"
+
+    @property
+    def extras_dict(self) -> dict:
+        return json.loads(self.extras) if self.extras else {}
