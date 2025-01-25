@@ -2,10 +2,10 @@ import json
 from os import makedirs
 from os.path import exists
 from os.path import join as path_join
-from typing import Any, Type
+from typing import Any
 
 from pydantic import BaseModel, Field, PrivateAttr
-from requests import HTTPError, JSONDecodeError, Session
+from requests import HTTPError, Session
 
 from line_works import config
 from line_works.decorator import save_cookie
@@ -85,24 +85,6 @@ class LineWorks(BaseModel, TalkApi):
         )
 
         logger.info(f"login success: {self!r}")
-
-    def _request_with_error_handling(
-        self,
-        method: str,
-        url: str,
-        ex: Type[Exception],
-        **kwargs: Any,
-    ) -> dict[str, Any]:
-        try:
-            r = self.session.request(method, url, **kwargs)
-            r.raise_for_status()
-            return r.json()  # type: ignore
-        except HTTPError as e:
-            raise ex(f"HTTP error: {e}") from e
-        except JSONDecodeError as e:
-            raise ex(f"Invalid response: [{r.status_code}] {r.url}") from e
-        except Exception as e:
-            raise ex(f"Unexpected error: {e}") from e
 
     @save_cookie
     def login_with_id(self) -> None:
