@@ -1,11 +1,11 @@
 from typing import Self
 
 from line_works.enums.message_type import MessageType
-from line_works.models.sticker import Sticker
 from line_works.openapi.talk.models.caller import Caller
 from line_works.openapi.talk.models.send_message_request import (
     SendMessageRequest as BaseSendMessageRequest,
 )
+from line_works.openapi.talk.models.sticker import Sticker
 
 
 class SendMessageRequest(BaseSendMessageRequest):
