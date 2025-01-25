@@ -31,11 +31,14 @@ from line_works.openapi.talk.exceptions import ApiAttributeError
 from line_works.openapi.talk.exceptions import ApiException
 
 # import models into sdk package
+from line_works.openapi.talk.models.base_response import BaseResponse
 from line_works.openapi.talk.models.caller import Caller
 from line_works.openapi.talk.models.email import Email
 from line_works.openapi.talk.models.my_info import MyInfo
 from line_works.openapi.talk.models.name import Name
 from line_works.openapi.talk.models.organization import Organization
 from line_works.openapi.talk.models.send_message_request import SendMessageRequest
+from line_works.openapi.talk.models.send_message_response import SendMessageResponse
+from line_works.openapi.talk.models.sent_message import SentMessage
 from line_works.openapi.talk.models.user import User
 from line_works.openapi.talk.models.works_at import WorksAt

@@ -14,7 +14,11 @@ paths:
       summary: Get My Information
       responses:
         '200':
-          $ref: '#/components/responses/GetMyInfoResponse'
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MyInfo'
       operationId: get-my-info
       description: Get your own information.
       parameters:
@@ -26,6 +30,10 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendMessageResponse'
       requestBody:
         content:
           application/json:
@@ -374,6 +382,104 @@ components:
       required:
         - domainId
         - userNo
+    SentMessage:
+      title: SentMessage
+      x-stoplight:
+        id: rl894wsrkndxs
+      type: object
+      properties:
+        messageId:
+          type: integer
+          x-stoplight:
+            id: b3vq3fv6uzzt3
+        channelNo:
+          type: integer
+          x-stoplight:
+            id: 4ipvjs5nw1jrq
+        writerId:
+          type: string
+          x-stoplight:
+            id: fa21q7rigddv6
+        userNo:
+          type: integer
+          x-stoplight:
+            id: ff6r9feqscmil
+        botNo:
+          type: integer
+          x-stoplight:
+            id: y9cqpowtfimo9
+        messageNo:
+          type: integer
+          x-stoplight:
+            id: bs184jdfxfi4i
+        content:
+          type: string
+          x-stoplight:
+            id: idaq2bs51kwqm
+        memberCount:
+          type: integer
+          x-stoplight:
+            id: 65dahzr0ra1oh
+        messageTypeCode:
+          type: integer
+          x-stoplight:
+            id: 3k1kvq7fbrgbe
+        messageStatusType:
+          type: string
+          x-stoplight:
+            id: dhbjsrgd4xu65
+        messageStatusTypeCode:
+          type: integer
+          x-stoplight:
+            id: 3834dqptotlox
+        extras:
+          type: string
+          x-stoplight:
+            id: k6oildongqwnu
+        tid:
+          type: integer
+          x-stoplight:
+            id: 39iepmgaxj1yf
+        createTime:
+          type: integer
+          x-stoplight:
+            id: 1xoykipvi3liu
+        updateTime:
+          type: integer
+          x-stoplight:
+            id: p4pg5ut7hur5j
+      required:
+        - messageId
+        - channelNo
+        - writerId
+        - userNo
+        - botNo
+        - messageNo
+        - content
+        - memberCount
+        - messageTypeCode
+        - messageStatusType
+        - messageStatusTypeCode
+        - tid
+        - createTime
+        - updateTime
+    BaseResponse:
+      title: BaseResponse
+      x-stoplight:
+        id: ii6vmg4x8dxf0
+      type: object
+      properties:
+        code:
+          type: integer
+          x-stoplight:
+            id: q5jy0wxywqci6
+        message:
+          type: string
+          x-stoplight:
+            id: vuutgbon5vsn4
+      required:
+        - code
+        - message
     SendMessageRequest:
       title: SendMessageRequest
       x-stoplight:
@@ -417,13 +523,23 @@ components:
         - channelNo
         - caller
         - type
-  responses:
-    GetMyInfoResponse:
-      description: Example response
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/MyInfo'
+    SendMessageResponse:
+      title: SendMessageResponse
+      x-stoplight:
+        id: lom8lh6zjh88y
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          x-stoplight:
+            id: yz8zdxhbu4wgq
+          properties:
+            result:
+              $ref: '#/components/schemas/SentMessage'
+              x-stoplight:
+                id: fkb3ovg4vm89i
+          required:
+            - result
+  responses: {}
   requestBodies: {}
   parameters:
     Cookie:

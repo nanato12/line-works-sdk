@@ -72,12 +72,12 @@ No authorization required
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Example response |  -  |
+**200** | OK |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **send_message**
-> send_message(cookie=cookie, send_message_request=send_message_request)
+> SendMessageResponse send_message(cookie=cookie, send_message_request=send_message_request)
 
 Send Message
 
@@ -87,6 +87,7 @@ Send Message
 ```python
 import line_works.openapi.talk
 from line_works.openapi.talk.models.send_message_request import SendMessageRequest
+from line_works.openapi.talk.models.send_message_response import SendMessageResponse
 from line_works.openapi.talk.rest import ApiException
 from pprint import pprint
 
@@ -106,7 +107,9 @@ with line_works.openapi.talk.ApiClient(configuration) as api_client:
 
     try:
         # Send Message
-        api_instance.send_message(cookie=cookie, send_message_request=send_message_request)
+        api_response = api_instance.send_message(cookie=cookie, send_message_request=send_message_request)
+        print("The response of DefaultApi->send_message:\n")
+        pprint(api_response)
     except Exception as e:
         print("Exception when calling DefaultApi->send_message: %s\n" % e)
 ```
@@ -123,7 +126,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-void (empty response body)
+[**SendMessageResponse**](SendMessageResponse.md)
 
 ### Authorization
 
@@ -132,7 +135,7 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: application/json
- - **Accept**: Not defined
+ - **Accept**: application/json
 
 ### HTTP response details
 
