@@ -30,12 +30,6 @@ class MQTTClient(BaseModel):
     class Config:
         arbitrary_types_allowed = True
 
-    @property
-    def cookie_str(self) -> str:
-        return "; ".join(
-            f"{k}={v}" for k, v in self.works.session.cookies.items()
-        )
-
     def add_trace_func(
         self,
         packet_type: PacketType,
@@ -47,7 +41,10 @@ class MQTTClient(BaseModel):
         self._ws = await websockets.connect(
             config.HOST,
             ssl=create_default_context(),
-            additional_headers={"Cookie": self.cookie_str, **config.HEADERS},
+            additional_headers={
+                "Cookie": self.works.cookie_str,
+                **config.HEADERS,
+            },
             subprotocols=["mqtt"],
             ping_interval=None,
         )
