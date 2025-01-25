@@ -321,6 +321,7 @@ class DefaultApi:
     ) -> SendMessageResponse:
         """Send Message
 
+        Send Message.
 
         :param cookie: cookie
         :type cookie: str
@@ -391,6 +392,7 @@ class DefaultApi:
     ) -> ApiResponse[SendMessageResponse]:
         """Send Message
 
+        Send Message.
 
         :param cookie: cookie
         :type cookie: str
@@ -461,6 +463,7 @@ class DefaultApi:
     ) -> RESTResponseType:
         """Send Message
 
+        Send Message.
 
         :param cookie: cookie
         :type cookie: str

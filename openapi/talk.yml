@@ -1,6 +1,4 @@
 openapi: 3.1.0
-x-stoplight:
-  id: yqpvor4nca3xa
 info:
   title: LINE WORKS Talk API
   version: '1.0'
@@ -42,12 +40,11 @@ paths:
         description: ''
       parameters:
         - $ref: '#/components/parameters/Cookie'
+      description: Send Message.
 components:
   schemas:
     Name:
       type: object
-      x-stoplight:
-        id: msr07ec2ry46f
       x-examples:
         Example 1:
           firstName: \u3044\u3064
@@ -367,48 +364,30 @@ components:
       title: ''
     Caller:
       title: Caller
-      x-stoplight:
-        id: jhc0gwoqs78ne
       type: object
       properties:
         domainId:
           type: integer
-          x-stoplight:
-            id: 3k93aquy36yuf
         userNo:
           type: integer
-          x-stoplight:
-            id: 22zv3bm1dizgv
       required:
         - domainId
         - userNo
     Sticker:
       title: Sticker
-      x-stoplight:
-        id: s7k29eleyplvg
       type: object
       description: sticker model
       properties:
         pkgVer:
           type: string
-          x-stoplight:
-            id: ndbojnl6d82rx
         pkgId:
           type: string
-          x-stoplight:
-            id: c8jicid398fb2
         stkType:
           type: string
-          x-stoplight:
-            id: qus5jgkox4nul
         stkId:
           type: string
-          x-stoplight:
-            id: db0qmahf4taqc
         stkOpt:
           type: string
-          x-stoplight:
-            id: pn4dldxagpmdc
       required:
         - pkgVer
         - pkgId
@@ -417,70 +396,38 @@ components:
         - stkOpt
     SentMessage:
       title: SentMessage
-      x-stoplight:
-        id: rl894wsrkndxs
       type: object
       properties:
         messageId:
           type: integer
-          x-stoplight:
-            id: b3vq3fv6uzzt3
         channelNo:
           type: integer
-          x-stoplight:
-            id: 4ipvjs5nw1jrq
         writerId:
           type: string
-          x-stoplight:
-            id: fa21q7rigddv6
         userNo:
           type: integer
-          x-stoplight:
-            id: ff6r9feqscmil
         botNo:
           type: integer
-          x-stoplight:
-            id: y9cqpowtfimo9
         messageNo:
           type: integer
-          x-stoplight:
-            id: bs184jdfxfi4i
         content:
           type: string
-          x-stoplight:
-            id: idaq2bs51kwqm
         memberCount:
           type: integer
-          x-stoplight:
-            id: 65dahzr0ra1oh
         messageTypeCode:
           type: integer
-          x-stoplight:
-            id: 3k1kvq7fbrgbe
         messageStatusType:
           type: string
-          x-stoplight:
-            id: dhbjsrgd4xu65
         messageStatusTypeCode:
           type: integer
-          x-stoplight:
-            id: 3834dqptotlox
         extras:
           type: string
-          x-stoplight:
-            id: k6oildongqwnu
         tid:
           type: integer
-          x-stoplight:
-            id: 39iepmgaxj1yf
         createTime:
           type: integer
-          x-stoplight:
-            id: 1xoykipvi3liu
         updateTime:
           type: integer
-          x-stoplight:
-            id: p4pg5ut7hur5j
       required:
         - messageId
         - channelNo
@@ -498,78 +445,47 @@ components:
         - updateTime
     BaseResponse:
       title: BaseResponse
-      x-stoplight:
-        id: ii6vmg4x8dxf0
       type: object
       properties:
         code:
           type: integer
-          x-stoplight:
-            id: q5jy0wxywqci6
         message:
           type: string
-          x-stoplight:
-            id: vuutgbon5vsn4
       required:
         - code
         - message
     SendMessageRequest:
       title: SendMessageRequest
-      x-stoplight:
-        id: qcu3gzjnr4evu
       type: object
       properties:
         serviceId:
           type: string
-          x-stoplight:
-            id: jzeecvllwehco
           default: works
         channelNo:
           type: integer
-          x-stoplight:
-            id: lvukdrhur6rjp
         tempMessageId:
           type: integer
-          x-stoplight:
-            id: ozwjefhf02jro
           default: 733428260
         caller:
           $ref: '#/components/schemas/Caller'
-          x-stoplight:
-            id: 6s718xzgww20j
         extras:
           type: string
-          x-stoplight:
-            id: iu6o1hofbpx80
         content:
           type: string
-          x-stoplight:
-            id: ym795mp0jnx2l
         type:
           type: integer
-          x-stoplight:
-            id: 8d9k9z02kj9u1
-          enum:
-            - 1
-            - 18
       required:
         - channelNo
         - caller
         - type
     SendMessageResponse:
       title: SendMessageResponse
-      x-stoplight:
-        id: lom8lh6zjh88y
       allOf:
         - $ref: '#/components/schemas/BaseResponse'
         - type: object
-          x-stoplight:
-            id: yz8zdxhbu4wgq
           properties:
             result:
               $ref: '#/components/schemas/SentMessage'
-              x-stoplight:
-                id: fkb3ovg4vm89i
           required:
             - result
   responses: {}

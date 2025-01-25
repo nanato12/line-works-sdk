@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from line_works.openapi.talk.models.caller import Caller
 from typing import Optional, Set
@@ -35,13 +35,6 @@ class SendMessageRequest(BaseModel):
     content: Optional[StrictStr] = None
     type: StrictInt
     __properties: ClassVar[List[str]] = ["serviceId", "channelNo", "tempMessageId", "caller", "extras", "content", "type"]
-
-    @field_validator('type')
-    def type_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set([1, 18]):
-            raise ValueError("must be one of enum values (1, 18)")
-        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
