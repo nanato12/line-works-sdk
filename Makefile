@@ -47,6 +47,4 @@ generate:
 		-g python \
 		-o . \
 		-c openapi/config.yml \
-		--additional-properties packageName=line_works.openapi.talk \
-		--git-repo-id line-works-sdk \
-		--git-user-id nanato12
+		--additional-properties packageName=line_works.openapi.talk
