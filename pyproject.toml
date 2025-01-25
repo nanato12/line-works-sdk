@@ -1,7 +1,7 @@
 [tool.ruff]
 line-length = 79
 show-fixes = true
-extend-exclude = ["^line_works/openapi/**"]
+extend-exclude = ["line_works/openapi/"]
 
 [tool.ruff.format]
 docstring-code-format = false
@@ -15,7 +15,7 @@ unfixable = []
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
-"line_works/config.py" = ["E501"]
+"/config.py" = ["E5"]
 
 [tool.mypy]
 explicit_package_bases = true
@@ -25,4 +25,4 @@ disallow_untyped_calls = true
 disallow_untyped_defs = true
 ignore_missing_imports = true
 follow_imports = "skip"
-exclude = ["^venv/*", "^line_works/openapi/**"]
+exclude = ["^venv/*", "^line_works/openapi/*"]
