@@ -43,7 +43,7 @@ generate:
 	npx @openapitools/openapi-generator-cli generate \
 		-i openapi/openapi.yml \
 		-g python \
-		-o test \
+		-o . \
 		-c openapi/config.yml \
 		--git-repo-id line-works-sdk \
 		--git-user-id nanato12
