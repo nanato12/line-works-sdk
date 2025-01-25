@@ -9,13 +9,16 @@ from line_works.openapi.talk.models.sticker import Sticker
 
 
 class SendMessageRequest(BaseSendMessageRequest):
+    class Config:
+        use_enum_values = True
+
     @classmethod
     def text_message(cls, caller: Caller, channel_no: int, text: str) -> Self:
         return cls(
             channel_no=channel_no,
             content=text,
             caller=caller,
-            type=MessageType.TEXT.value,
+            type=MessageType.TEXT,
         )
 
     @classmethod
@@ -26,5 +29,5 @@ class SendMessageRequest(BaseSendMessageRequest):
             channel_no=channel_no,
             caller=caller,
             extras=sticker.model_dump_json(by_alias=True),
-            type=MessageType.STICKER.value,
+            type=MessageType.STICKER,
         )
