@@ -23,5 +23,6 @@ from line_works.openapi.talk.models.organization import Organization
 from line_works.openapi.talk.models.send_message_request import SendMessageRequest
 from line_works.openapi.talk.models.send_message_response import SendMessageResponse
 from line_works.openapi.talk.models.sent_message import SentMessage
+from line_works.openapi.talk.models.sticker import Sticker
 from line_works.openapi.talk.models.user import User
 from line_works.openapi.talk.models.works_at import WorksAt
