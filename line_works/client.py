@@ -8,28 +8,23 @@ from pydantic import BaseModel, Field, PrivateAttr
 from requests import HTTPError, JSONDecodeError, Session
 
 from line_works import config
-from line_works.constants import RequestType
 from line_works.decorator import save_cookie
 from line_works.enums.yes_no_option import YesNoOption
-from line_works.exceptions import (
-    GetMyInfoException,
-    LoginException,
-    SendMessageException,
-)
+from line_works.exceptions import LoginException
 from line_works.logger import get_file_path_logger
-from line_works.models.caller import Caller
 from line_works.models.sticker import Sticker
+from line_works.openapi.talk.api.default_api import DefaultApi as TalkApi
+from line_works.openapi.talk.api_client import ApiClient as TalkApiClient
+from line_works.openapi.talk.models.caller import Caller
 from line_works.requests.login import LoginRequest
 from line_works.requests.send_message import SendMessageRequest
-from line_works.responses.get_my_info import GetMyInfoResponse
 from line_works.responses.send_message import SendMessageResponse
 from line_works.urls.auth import AuthURL
-from line_works.urls.talk import TalkURL
 
 logger = get_file_path_logger(__name__)
 
 
-class LineWorks(BaseModel):
+class LineWorks(BaseModel, TalkApi):
     works_id: str
     password: str = Field(repr=False)
     keep_login: YesNoOption = Field(repr=False, default=YesNoOption.YES)
@@ -38,6 +33,9 @@ class LineWorks(BaseModel):
     domain_id: int = Field(init=False, default=0)
     contact_no: int = Field(init=False, default=0)
     session: Session = Field(init=False, repr=False, default_factory=Session)
+    api_client: TalkApiClient = Field(
+        init=False, repr=False, default_factory=TalkApiClient
+    )
     _caller: Caller = PrivateAttr()
 
     class Config:
@@ -50,6 +48,10 @@ class LineWorks(BaseModel):
     @property
     def cookie_path(self) -> str:
         return path_join(self.session_dir, "cookie.json")
+
+    @property
+    def cookie_str(self) -> str:
+        return "; ".join(f"{k}={v}" for k, v in self.session.cookies.items())
 
     def model_post_init(self, __context: Any) -> None:
         makedirs(self.session_dir, exist_ok=True)
@@ -66,6 +68,11 @@ class LineWorks(BaseModel):
         except Exception:
             self.session.cookies.clear()
             self.login_with_id()
+
+        TalkApi.__init__(self)
+        for k, v in config.HEADERS.items():
+            self.api_client.set_default_header(k, v)
+        self.api_client.set_default_header("Cookie", self.cookie_str)
 
         my_info = self.get_my_info()
         self.tenant_id = my_info.tenant_id
@@ -113,31 +120,18 @@ class LineWorks(BaseModel):
         except HTTPError as e:
             raise LoginException(e)
 
-    def get_my_info(self) -> GetMyInfoResponse:
-        d = self._request_with_error_handling(
-            RequestType.GET,
-            TalkURL.MY_INFO,
-            GetMyInfoException,
-        )
-        return GetMyInfoResponse.model_validate(d)  # type: ignore
-
-    def send_message(self, req: SendMessageRequest) -> SendMessageResponse:
-        d = self._request_with_error_handling(
-            RequestType.POST,
-            TalkURL.SEND_MESSAGE,
-            SendMessageException,
-            json=req.model_dump(by_alias=True),
-        )
-        return SendMessageResponse.model_validate(d)  # type: ignore
-
     def send_text_message(self, to: int, text: str) -> SendMessageResponse:
         return self.send_message(
-            SendMessageRequest.text_message(self._caller, to, text)
+            send_message_request=SendMessageRequest.text_message(
+                self._caller, to, text
+            )
         )
 
     def send_sticker_message(
         self, to: int, sticker: Sticker
     ) -> SendMessageResponse:
         return self.send_message(
-            SendMessageRequest.sticker_message(self._caller, to, sticker)
+            send_message_request=SendMessageRequest.sticker_message(
+                self._caller, to, sticker
+            )
         )
