@@ -26,9 +26,11 @@
 .gitignore
 .openapi-generator-ignore
 .travis.yml
-qiita/__init__.py
+test
 git_push.sh
 pyproject.toml
 setup.cfg
 setup.py
+test-requirements.txt
+tox.ini
 README.md
