@@ -12,13 +12,15 @@ from line_works.decorator import save_cookie
 from line_works.enums.yes_no_option import YesNoOption
 from line_works.exceptions import LoginException
 from line_works.logger import get_file_path_logger
-from line_works.models.sticker import Sticker
 from line_works.openapi.talk.api.default_api import DefaultApi as TalkApi
 from line_works.openapi.talk.api_client import ApiClient as TalkApiClient
 from line_works.openapi.talk.models.caller import Caller
+from line_works.openapi.talk.models.send_message_response import (
+    SendMessageResponse,
+)
+from line_works.openapi.talk.models.sticker import Sticker
 from line_works.requests.login import LoginRequest
 from line_works.requests.send_message import SendMessageRequest
-from line_works.responses.send_message import SendMessageResponse
 from line_works.urls.auth import AuthURL
 
 logger = get_file_path_logger(__name__)

@@ -382,6 +382,39 @@ components:
       required:
         - domainId
         - userNo
+    Sticker:
+      title: Sticker
+      x-stoplight:
+        id: s7k29eleyplvg
+      type: object
+      description: sticker model
+      properties:
+        pkgVer:
+          type: string
+          x-stoplight:
+            id: ndbojnl6d82rx
+        pkgId:
+          type: string
+          x-stoplight:
+            id: c8jicid398fb2
+        stkType:
+          type: string
+          x-stoplight:
+            id: qus5jgkox4nul
+        stkId:
+          type: string
+          x-stoplight:
+            id: db0qmahf4taqc
+        stkOpt:
+          type: string
+          x-stoplight:
+            id: pn4dldxagpmdc
+      required:
+        - pkgVer
+        - pkgId
+        - stkType
+        - stkId
+        - stkOpt
     SentMessage:
       title: SentMessage
       x-stoplight:

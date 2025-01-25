@@ -4,9 +4,9 @@ from typing import Optional
 from pydantic import Field
 
 from line_works.exceptions import LogicException
-from line_works.models.sticker import Sticker
 from line_works.mqtt.enums.notification_type import NotificationType
 from line_works.mqtt.models.payload.badge import BadgePayload
+from line_works.openapi.talk.models.sticker import Sticker
 
 
 class MessagePayload(BadgePayload):
