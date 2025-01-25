@@ -134,3 +134,6 @@ dmypy.json
 # app
 .sessions
 wmqtt.py
+
+# openapi generator
+.openapi-generator
