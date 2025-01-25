@@ -43,9 +43,10 @@ generate:
 	rm -rf docs
 	rm -rf line_works/openapi
 	npx @openapitools/openapi-generator-cli generate \
-		-i openapi/openapi.yml \
+		-i openapi/talk.yml \
 		-g python \
 		-o . \
 		-c openapi/config.yml \
+		--additional-properties packageName=line_works.openapi.talk \
 		--git-repo-id line-works-sdk \
 		--git-user-id nanato12
