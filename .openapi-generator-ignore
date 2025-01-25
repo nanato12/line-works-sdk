@@ -29,6 +29,7 @@
 test
 git_push.sh
 pyproject.toml
+requirements.txt
 setup.cfg
 setup.py
 test-requirements.txt
