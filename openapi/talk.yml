@@ -414,9 +414,7 @@ components:
             - 1
             - 18
       required:
-        - serviceId
         - channelNo
-        - tempMessageId
         - caller
         - type
   responses:
