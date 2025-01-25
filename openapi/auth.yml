@@ -1,0 +1,90 @@
+openapi: 3.1.0
+x-stoplight:
+  id: t11857ls283vg
+info:
+  title: LINE WORKS Auth API
+  version: '1.0'
+servers:
+  - url: 'https://auth.worksmobile.com'
+    description: AuthURL
+paths:
+  /login/login:
+    get:
+      summary: Get Login Page
+      tags: []
+      responses: {}
+      operationId: get-login-page
+  /login/loginProcessV2:
+    post:
+      summary: Login Process V2
+      operationId: login
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+          headers: {}
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+        description: ''
+      description: ''
+components:
+  schemas:
+    LoginRequest:
+      title: LoginRequest
+      x-stoplight:
+        id: 0zn8n46gfsubb
+      type: object
+      properties:
+        inputId:
+          type: string
+          x-stoplight:
+            id: cfvkupay6zy13
+        password:
+          type: string
+          x-stoplight:
+            id: zyca4rrkc5end
+        keepLoginYn:
+          type: string
+          x-stoplight:
+            id: hfa91lgiabrf1
+          enum:
+            - 'Y'
+            - 'N'
+          default: 'Y'
+        rememberIdYn:
+          type: string
+          x-stoplight:
+            id: ucpmov3mgqa86
+          enum:
+            - 'Y'
+            - 'N'
+          default: 'Y'
+        accessUrl:
+          type: string
+          x-stoplight:
+            id: qskbrqhh3shvj
+          default: 'https://talk.worksmobile.com'
+      required:
+        - inputId
+        - password
+        - keepLoginYn
+        - rememberIdYn
+        - accessUrl
+    LoginResponse:
+      title: LoginResponse
+      x-stoplight:
+        id: 9qsyyakonl4on
+      type: object
+      properties:
+        accessUrl:
+          type: string
+          x-stoplight:
+            id: 9s7y7556g6hu2
+      required:
+        - accessUrl

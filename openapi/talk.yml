@@ -1,0 +1,445 @@
+openapi: 3.1.0
+x-stoplight:
+  id: yqpvor4nca3xa
+info:
+  title: LINE WORKS Talk API
+  version: '1.0'
+servers:
+  - url: 'https://talk.worksmobile.com'
+    description: TalkURL
+paths:
+  /p/contact/v3/domain/contacts/my:
+    parameters: []
+    get:
+      summary: Get My Information
+      responses:
+        '200':
+          $ref: '#/components/responses/GetMyInfoResponse'
+      operationId: get-my-info
+      description: Get your own information.
+      parameters:
+        - $ref: '#/components/parameters/Cookie'
+  /p/oneapp/client/chat/sendMessage:
+    post:
+      summary: Send Message
+      operationId: send-message
+      responses:
+        '200':
+          description: OK
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendMessageRequest'
+        description: ''
+      parameters:
+        - $ref: '#/components/parameters/Cookie'
+components:
+  schemas:
+    Name:
+      type: object
+      x-stoplight:
+        id: msr07ec2ry46f
+      x-examples:
+        Example 1:
+          firstName: \u3044\u3064
+          lastName: \u306a\u306a\u3068
+          phoneticFirstName: ''
+          phoneticLastName: ''
+          displayName: \u306a\u306a\u3068\u3044\u3064
+          phoneticName: ''
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        phoneticFirstName:
+          type: string
+        phoneticLastName:
+          type: string
+        displayName:
+          type: string
+        phoneticName:
+          type: string
+      required:
+        - firstName
+        - lastName
+        - phoneticFirstName
+        - phoneticLastName
+        - displayName
+        - phoneticName
+    Email:
+      type: object
+      x-examples:
+        Example 1:
+          content: nanato12@when-0
+          typeCode: WORK
+          represent: true
+      properties:
+        content:
+          type: string
+        typeCode:
+          type: string
+        represent:
+          type: boolean
+      required:
+        - content
+        - typeCode
+        - represent
+    User:
+      type: object
+      x-examples:
+        Example 1:
+          serviceType: line
+          worksAtUserNo: 913000042832541
+          name: \u306a\u306a\u3068\u3044\u3064
+          id: nanato12@when-0
+          inviteUrl: 'https://works.do/R/ti/p/nanato12@when-0'
+      properties:
+        serviceType:
+          type: string
+        worksAtUserNo:
+          type: integer
+        name:
+          type: string
+        id:
+          type: string
+        inviteUrl:
+          type: string
+      required:
+        - serviceType
+        - worksAtUserNo
+        - name
+        - id
+        - inviteUrl
+    WorksAt:
+      type: object
+      x-examples:
+        Example 1:
+          id: nanato12@when-0
+          inviteUrl: 'https://works.do/R/ti/p/nanato12@when-0'
+          users:
+            - serviceType: line
+              worksAtUserNo: 913000042832541
+              name: \u306a\u306a\u3068\u3044\u3064
+              id: nanato12@when-0
+              inviteUrl: 'https://works.do/R/ti/p/nanato12@when-0'
+            - serviceType: worksat
+              worksAtUserNo: 913000042832540
+              name: \u306a\u306a\u3068\u3044\u3064
+              id: nanato12@when-0
+              inviteUrl: 'https://works.do/R/ti/p/nanato12@when-0'
+          worksAtCount: 0
+          idSearchBlock: false
+      properties:
+        id:
+          type: string
+        inviteUrl:
+          type: string
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+        worksAtCount:
+          type: integer
+        idSearchBlock:
+          type: boolean
+      required:
+        - id
+        - inviteUrl
+        - users
+        - worksAtCount
+        - idSearchBlock
+    Organization:
+      type: object
+      x-examples:
+        Example 1:
+          domainId: 400478918
+          organization: \u306a\u306a\u305f\u3044\u3064
+          groups: []
+      properties:
+        domainId:
+          type: integer
+        organization:
+          type: string
+        groups:
+          type: array
+          items:
+            type: object
+      required:
+        - domainId
+        - organization
+        - groups
+    MyInfo:
+      type: object
+      x-examples:
+        Example 1:
+          tenantId: 400478918
+          domainId: 400478918
+          contactNo: 110002509202075
+          readOnly: false
+          tempId: false
+          name:
+            firstName: \u3044\u3064
+            lastName: \u306a\u306a\u3068
+            phoneticFirstName: ''
+            phoneticLastName: ''
+            displayName: \u306a\u306a\u3068\u3044\u3064
+            phoneticName: ''
+          i18nName: ''
+          i18nNames: []
+          photos: []
+          organizations:
+            - domainId: 400478918
+              organization: \u306a\u306a\u305f\u3044\u3064
+              groups: []
+          emails:
+            - content: nanato12@when-0
+              typeCode: WORK
+              represent: true
+            - content: okj0589@gmail.com
+              typeCode: OTHER
+              represent: false
+          telephones: []
+          messengers: []
+          position: \u7ba1\u7406\u8077
+          department: ''
+          location: ''
+          important: false
+          executive: false
+          photoHash: ''
+          worksAt:
+            id: nanato12@when-0
+            inviteUrl: 'https://works.do/R/ti/p/nanato12@when-0'
+            users:
+              - serviceType: line
+                worksAtUserNo: 913000042832541
+                name: \u306a\u306a\u3068\u3044\u3064
+                id: nanato12@when-0
+                inviteUrl: 'https://works.do/R/ti/p/nanato12@when-0'
+              - serviceType: worksat
+                worksAtUserNo: 913000042832540
+                name: \u306a\u306a\u3068\u3044\u3064
+                id: nanato12@when-0
+                inviteUrl: 'https://works.do/R/ti/p/nanato12@when-0'
+            worksAtCount: 0
+            idSearchBlock: false
+          accessLimit: false
+          userPhotoModify: true
+          userAbsenceModify: false
+          organization: \u306a\u306a\u305f\u3044\u3064
+          groups: []
+          worksServices:
+            - contact
+            - appdir
+            - message
+            - home
+            - calendar
+            - form
+            - task
+          customFields: []
+          profileStatuses: []
+          profileStatusesV2: []
+          instance: 23921
+      properties:
+        tenantId:
+          type: integer
+        domainId:
+          type: integer
+        contactNo:
+          type: integer
+        readOnly:
+          type: boolean
+        tempId:
+          type: boolean
+        name:
+          $ref: '#/components/schemas/Name'
+        i18nName:
+          type: string
+        i18nNames:
+          type: array
+          items:
+            type: object
+        photos:
+          type: array
+          items:
+            type: object
+        organizations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Organization'
+        emails:
+          type: array
+          items:
+            $ref: '#/components/schemas/Email'
+        telephones:
+          type: array
+          items:
+            type: object
+        messengers:
+          type: array
+          items:
+            type: object
+        position:
+          type: string
+        department:
+          type: string
+        location:
+          type: string
+        important:
+          type: boolean
+        executive:
+          type: boolean
+        photoHash:
+          type: string
+        worksAt:
+          $ref: '#/components/schemas/WorksAt'
+        accessLimit:
+          type: boolean
+        userPhotoModify:
+          type: boolean
+        userAbsenceModify:
+          type: boolean
+        organization:
+          type: string
+        groups:
+          type: array
+          items:
+            type: object
+        worksServices:
+          type: array
+          items:
+            type: string
+        customFields:
+          type: array
+          items:
+            type: object
+        profileStatuses:
+          type: array
+          items:
+            type: object
+        profileStatusesV2:
+          type: array
+          items:
+            type: object
+        instance:
+          type: integer
+      required:
+        - tenantId
+        - domainId
+        - contactNo
+        - readOnly
+        - tempId
+        - name
+        - i18nName
+        - i18nNames
+        - photos
+        - organizations
+        - emails
+        - telephones
+        - messengers
+        - position
+        - department
+        - location
+        - important
+        - executive
+        - photoHash
+        - worksAt
+        - accessLimit
+        - userPhotoModify
+        - userAbsenceModify
+        - organization
+        - groups
+        - worksServices
+        - customFields
+        - profileStatuses
+        - profileStatusesV2
+        - instance
+      description: ''
+      title: ''
+    Caller:
+      title: Caller
+      x-stoplight:
+        id: jhc0gwoqs78ne
+      type: object
+      properties:
+        domainId:
+          type: integer
+          x-stoplight:
+            id: 3k93aquy36yuf
+        userNo:
+          type: integer
+          x-stoplight:
+            id: 22zv3bm1dizgv
+      required:
+        - domainId
+        - userNo
+    SendMessageRequest:
+      title: SendMessageRequest
+      x-stoplight:
+        id: qcu3gzjnr4evu
+      type: object
+      properties:
+        serviceId:
+          type: string
+          x-stoplight:
+            id: jzeecvllwehco
+          default: works
+        channelNo:
+          type: integer
+          x-stoplight:
+            id: lvukdrhur6rjp
+        tempMessageId:
+          type: integer
+          x-stoplight:
+            id: ozwjefhf02jro
+          default: 733428260
+        caller:
+          $ref: '#/components/schemas/Caller'
+          x-stoplight:
+            id: 6s718xzgww20j
+        extras:
+          type: string
+          x-stoplight:
+            id: iu6o1hofbpx80
+        content:
+          type: string
+          x-stoplight:
+            id: ym795mp0jnx2l
+        type:
+          type: integer
+          x-stoplight:
+            id: 8d9k9z02kj9u1
+          enum:
+            - 1
+            - 18
+      required:
+        - serviceId
+        - channelNo
+        - tempMessageId
+        - caller
+        - type
+  responses:
+    GetMyInfoResponse:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MyInfo'
+  requestBodies: {}
+  parameters:
+    Cookie:
+      name: cookie
+      in: header
+      required: false
+      schema:
+        type: string
+      description: cookie
+    UserAgent:
+      name: User-Agent
+      in: header
+      required: true
+      schema:
+        type: string
+        default: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36'
+      description: user agent

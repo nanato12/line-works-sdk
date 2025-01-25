@@ -1,2 +1,3 @@
 additionalProperties:
-  packageName: line_works.openapi
+  gitRepoId: line-works-sdk
+  gitUserId: nanato12
