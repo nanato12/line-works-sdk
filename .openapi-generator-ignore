@@ -26,6 +26,7 @@
 .gitignore
 .openapi-generator-ignore
 .travis.yml
+line_works/__init__.py
 test/*
 git_push.sh
 pyproject.toml

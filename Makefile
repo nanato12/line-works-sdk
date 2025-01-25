@@ -40,6 +40,8 @@ pypi:
 
 .PHONY: generate
 generate:
+	rm -rf docs
+	rm -rf line_works/openapi
 	npx @openapitools/openapi-generator-cli generate \
 		-i openapi/openapi.yml \
 		-g python \
