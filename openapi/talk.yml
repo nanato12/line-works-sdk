@@ -61,6 +61,19 @@ paths:
       parameters:
         - $ref: '#/components/parameters/Cookie'
     parameters: []
+  /p/oneapp/client/chat/quit:
+    post:
+      summary: Leave Channel
+      operationId: leave-channel
+      responses:
+        '200':
+          description: OK
+      description: Leave from the channel.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LeaveChannelRequest'
 components:
   schemas:
     Name:
@@ -663,6 +676,27 @@ components:
                 $ref: '#/components/schemas/Member'
           required:
             - members
+    LeaveChannelRequest:
+      title: LeaveChannelRequest
+      x-stoplight:
+        id: jnz7w0uhekotj
+      type: object
+      properties:
+        channelNo:
+          type: integer
+          x-stoplight:
+            id: wm0v9ylk0oqx8
+          default: 0
+        channelNoList:
+          type: array
+          x-stoplight:
+            id: xsoyen75lsqqb
+          items:
+            x-stoplight:
+              id: 4n3jg601c5jc3
+            type: integer
+      required:
+        - channelNoList
   responses: {}
   requestBodies: {}
   parameters:

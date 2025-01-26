@@ -8,6 +8,9 @@ from line_works.mqtt.models.payload.message import MessagePayload
 from line_works.openapi.talk.models.get_channel_members_request import (
     GetChannelMembersRequest,
 )
+from line_works.openapi.talk.models.leave_channel_request import (
+    LeaveChannelRequest,
+)
 
 logger = get_file_path_logger(__name__)
 
@@ -28,6 +31,14 @@ def receive_publish_packet(w: LineWorks, p: MQTTPacket) -> None:
 
     elif payload.loc_args1 == "/msg":
         w.send_text_message(payload.channel_no, f"{payload!r}")
+
+    elif payload.loc_args1 == "/leave":
+        w.send_text_message(payload.channel_no, "bye")
+        w.leave_channel(
+            leave_channel_request=LeaveChannelRequest(
+                channel_no_list=[payload.channel_no]
+            )
+        )
 
     elif payload.loc_args1 == "/id":
         w.send_text_message(payload.channel_no, str(payload.from_user_no))

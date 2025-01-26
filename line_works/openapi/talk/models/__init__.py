@@ -19,6 +19,7 @@ from line_works.openapi.talk.models.caller import Caller
 from line_works.openapi.talk.models.email import Email
 from line_works.openapi.talk.models.get_channel_members_request import GetChannelMembersRequest
 from line_works.openapi.talk.models.get_channel_members_response import GetChannelMembersResponse
+from line_works.openapi.talk.models.leave_channel_request import LeaveChannelRequest
 from line_works.openapi.talk.models.member import Member
 from line_works.openapi.talk.models.my_info import MyInfo
 from line_works.openapi.talk.models.name import Name
