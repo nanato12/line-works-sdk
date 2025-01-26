@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from line_works.openapi.talk.models.email import Email
 from line_works.openapi.talk.models.name import Name
 from line_works.openapi.talk.models.organization import Organization
@@ -45,7 +45,7 @@ class MyInfo(BaseModel):
     messengers: List[Dict[str, Any]]
     position: StrictStr
     department: StrictStr
-    location: StrictStr
+    location: Optional[StrictStr]
     important: StrictBool
     executive: StrictBool
     photo_hash: StrictStr = Field(alias="photoHash")
@@ -121,6 +121,11 @@ class MyInfo(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of works_at
         if self.works_at:
             _dict['worksAt'] = self.works_at.to_dict()
+        # set to None if location (nullable) is None
+        # and model_fields_set contains the field
+        if self.location is None and "location" in self.model_fields_set:
+            _dict['location'] = None
+
         return _dict
 
     @classmethod

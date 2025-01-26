@@ -456,7 +456,9 @@ components:
         department:
           type: string
         location:
-          type: string
+          type:
+            - string
+            - 'null'
         important:
           type: boolean
         executive:
