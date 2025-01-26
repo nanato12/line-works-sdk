@@ -41,6 +41,26 @@ paths:
       parameters:
         - $ref: '#/components/parameters/Cookie'
       description: Send Message.
+  /p/oneapp/client/chat/getChannelMembers:
+    post:
+      summary: Get Channel Members
+      operationId: get-channel-members
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetChannelMembersResponse'
+      description: Get information about the members in the channel.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetChannelMembersRequest'
+      parameters:
+        - $ref: '#/components/parameters/Cookie'
+    parameters: []
 components:
   schemas:
     Name:
@@ -117,6 +137,135 @@ components:
         - name
         - id
         - inviteUrl
+    Member:
+      type: object
+      x-examples:
+        Example 1:
+          userNo: 902100000604397
+          name: LINE Notify
+          i18nName: ''
+          i18nNames: null
+          nickName: ''
+          position: ''
+          i18nPositions: null
+          groupName: ''
+          i18nGroupNames: null
+          groupPosition: ''
+          i18nGroupPositions: null
+          photoHash: add2ed36139fd4d09510bbe6cc0a5e1b
+          join: true
+          joinTime: 1736274522110
+          updateTime: 1736274522111
+          domainId: 0
+          propertyFlag: 0
+          domainName: ''
+          i18nDomainNames: null
+          serviceType: line
+          relationStatus: none
+          tenantId: 0
+          guest: false
+      properties:
+        userNo:
+          type: integer
+        name:
+          type: string
+        i18nName:
+          type:
+            - string
+            - 'null'
+        i18nNames:
+          type:
+            - array
+            - 'null'
+          items: {}
+        nickName:
+          type:
+            - string
+            - 'null'
+        position:
+          type:
+            - string
+            - 'null'
+        i18nPositions:
+          type:
+            - array
+            - 'null'
+          items: {}
+        groupName:
+          type:
+            - string
+            - 'null'
+        i18nGroupNames:
+          type:
+            - array
+            - 'null'
+          items: {}
+        groupPosition:
+          type:
+            - string
+            - 'null'
+        i18nGroupPositions:
+          type:
+            - array
+            - 'null'
+          items: {}
+        photoHash:
+          type:
+            - string
+            - 'null'
+        join:
+          type: boolean
+        joinTime:
+          type: integer
+        updateTime:
+          type: integer
+        domainId:
+          type:
+            - integer
+            - 'null'
+        propertyFlag:
+          type: integer
+        domainName:
+          type:
+            - string
+            - 'null'
+        i18nDomainNames:
+          type:
+            - array
+            - 'null'
+          items: {}
+        serviceType:
+          type: string
+        relationStatus:
+          type: string
+        tenantId:
+          type: integer
+        guest:
+          type: boolean
+      required:
+        - userNo
+        - name
+        - i18nName
+        - i18nNames
+        - nickName
+        - position
+        - i18nPositions
+        - groupName
+        - i18nGroupNames
+        - groupPosition
+        - i18nGroupPositions
+        - photoHash
+        - join
+        - joinTime
+        - updateTime
+        - domainId
+        - propertyFlag
+        - domainName
+        - i18nDomainNames
+        - serviceType
+        - relationStatus
+        - tenantId
+        - guest
     WorksAt:
       type: object
       x-examples:
@@ -488,6 +637,32 @@ components:
               $ref: '#/components/schemas/SentMessage'
           required:
             - result
+    GetChannelMembersRequest:
+      title: GetChannelMembersRequest
+      type: object
+      properties:
+        channelNo:
+          type: integer
+        memberUpdateTime:
+          type: integer
+          default: 0
+        pagingCount:
+          type: integer
+          default: 500
+      required:
+        - channelNo
+    GetChannelMembersResponse:
+      title: GetChannelMembersResponse
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            members:
+              type: array
+              items:
+                $ref: '#/components/schemas/Member'
+          required:
+            - members
   responses: {}
   requestBodies: {}
   parameters:

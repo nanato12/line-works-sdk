@@ -34,6 +34,9 @@ from line_works.openapi.talk.exceptions import ApiException
 from line_works.openapi.talk.models.base_response import BaseResponse
 from line_works.openapi.talk.models.caller import Caller
 from line_works.openapi.talk.models.email import Email
+from line_works.openapi.talk.models.get_channel_members_request import GetChannelMembersRequest
+from line_works.openapi.talk.models.get_channel_members_response import GetChannelMembersResponse
+from line_works.openapi.talk.models.member import Member
 from line_works.openapi.talk.models.my_info import MyInfo
 from line_works.openapi.talk.models.name import Name
 from line_works.openapi.talk.models.organization import Organization
