@@ -150,7 +150,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **leave_channel**
-> leave_channel(leave_channel_request=leave_channel_request)
+> LeaveChannelResponse leave_channel(leave_channel_request=leave_channel_request)
 
 Leave Channel
 
@@ -162,6 +162,7 @@ Leave from the channel.
 ```python
 import line_works.openapi.talk
 from line_works.openapi.talk.models.leave_channel_request import LeaveChannelRequest
+from line_works.openapi.talk.models.leave_channel_response import LeaveChannelResponse
 from line_works.openapi.talk.rest import ApiException
 from pprint import pprint
 
@@ -180,7 +181,9 @@ with line_works.openapi.talk.ApiClient(configuration) as api_client:
 
     try:
         # Leave Channel
-        api_instance.leave_channel(leave_channel_request=leave_channel_request)
+        api_response = api_instance.leave_channel(leave_channel_request=leave_channel_request)
+        print("The response of DefaultApi->leave_channel:\n")
+        pprint(api_response)
     except Exception as e:
         print("Exception when calling DefaultApi->leave_channel: %s\n" % e)
 ```
@@ -196,7 +199,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-void (empty response body)
+[**LeaveChannelResponse**](LeaveChannelResponse.md)
 
 ### Authorization
 
@@ -205,7 +208,7 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: application/json
- - **Accept**: Not defined
+ - **Accept**: application/json
 
 ### HTTP response details
 

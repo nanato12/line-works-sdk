@@ -22,6 +22,7 @@ from typing_extensions import Annotated
 from line_works.openapi.talk.models.get_channel_members_request import GetChannelMembersRequest
 from line_works.openapi.talk.models.get_channel_members_response import GetChannelMembersResponse
 from line_works.openapi.talk.models.leave_channel_request import LeaveChannelRequest
+from line_works.openapi.talk.models.leave_channel_response import LeaveChannelResponse
 from line_works.openapi.talk.models.my_info import MyInfo
 from line_works.openapi.talk.models.send_message_request import SendMessageRequest
 from line_works.openapi.talk.models.send_message_response import SendMessageResponse
@@ -608,7 +609,7 @@ class DefaultApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> None:
+    ) -> LeaveChannelResponse:
         """Leave Channel
 
         Leave from the channel.
@@ -646,7 +647,7 @@ class DefaultApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '200': "LeaveChannelResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -675,7 +676,7 @@ class DefaultApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
+    ) -> ApiResponse[LeaveChannelResponse]:
         """Leave Channel
 
         Leave from the channel.
@@ -713,7 +714,7 @@ class DefaultApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '200': "LeaveChannelResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -780,7 +781,7 @@ class DefaultApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '200': "LeaveChannelResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -821,6 +822,13 @@ class DefaultApi:
             _body_params = leave_channel_request
 
 
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
 
         # set the HTTP header `Content-Type`
         if _content_type:
