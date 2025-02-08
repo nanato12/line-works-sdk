@@ -78,6 +78,23 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/LeaveChannelRequest'
+  /p/oneapp/client/chat/issueResourcePath:
+    post:
+      summary: ''
+      operationId: upload-resource
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UploadResourceRequest'
 components:
   schemas:
     Name:
@@ -699,6 +716,36 @@ components:
       title: LeaveChannelResponse
       allOf:
         - $ref: '#/components/schemas/BaseResponse'
+    UploadResourceRequest:
+      type: object
+      x-examples:
+        Example 1:
+          serviceId: works
+          channelNo: 308267720
+          filename: image_20250127_21.09.55.png
+          filesize: 28380
+          msgType: 11
+          channelType: 10
+      properties:
+        serviceId:
+          type: string
+        channelNo:
+          type: integer
+        filename:
+          type: string
+        filesize:
+          type: integer
+        msgType:
+          type: integer
+        channelType:
+          type: integer
+      required:
+        - serviceId
+        - channelNo
+        - filename
+        - filesize
+        - msgType
+        - channelType
   responses: {}
   requestBodies: {}
   parameters:

@@ -119,3 +119,12 @@ class LineWorks(BaseModel, TalkApi):
                 self._caller, to, sticker
             )
         )
+
+    def send_file_message(
+        self, to: int, sticker: Sticker
+    ) -> SendMessageResponse:
+        return self.send_message(
+            send_message_request=SendMessageRequest.sticker_message(
+                self._caller, to, sticker
+            )
+        )
