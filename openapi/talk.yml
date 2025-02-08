@@ -562,6 +562,20 @@ components:
         - stkType
         - stkId
         - stkOpt
+    FlexContent:
+      title: FlexContent
+      type: object
+      properties:
+        type:
+          type: string
+          default: flex
+        altText:
+          type: string
+        contents:
+          type: object
+      required:
+        - altText
+        - contents
     SentMessage:
       title: SentMessage
       type: object
