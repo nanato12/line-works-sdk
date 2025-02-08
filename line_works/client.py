@@ -15,6 +15,7 @@ from line_works.logger import get_file_path_logger
 from line_works.openapi.talk.api.default_api import DefaultApi as TalkApi
 from line_works.openapi.talk.api_client import ApiClient as TalkApiClient
 from line_works.openapi.talk.models.caller import Caller
+from line_works.openapi.talk.models.flex_content import FlexContent
 from line_works.openapi.talk.models.send_message_response import (
     SendMessageResponse,
 )
@@ -117,5 +118,14 @@ class LineWorks(BaseModel, TalkApi):
         return self.send_message(
             send_message_request=SendMessageRequest.sticker_message(
                 self._caller, to, sticker
+            )
+        )
+
+    def send_flex_message(
+        self, to: int, flex_content: FlexContent
+    ) -> SendMessageResponse:
+        return self.send_message(
+            send_message_request=SendMessageRequest.flex_message(
+                self._caller, to, flex_content
             )
         )
