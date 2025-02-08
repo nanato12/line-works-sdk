@@ -6,3 +6,9 @@ HEADERS = {
     "Accept-Language": "ja;q=0.8",
     "User-Agent": UA,
 }
+COOKIE = {
+    "language": "ja_JP",
+    "LC": "ja_JP",
+    "WORKS_RE_LOC": "jp2",
+    "WORKS_TE_LOC": "jp2",
+}

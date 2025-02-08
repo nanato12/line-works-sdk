@@ -69,7 +69,6 @@ class LineWorks(BaseModel, TalkApi):
         try:
             my_info = self.get_my_info()
         except Exception:
-            self.session.cookies.clear()
             self.login_with_id()
 
         TalkApi.__init__(self)
@@ -88,7 +87,10 @@ class LineWorks(BaseModel, TalkApi):
         logger.info(f"login success: {self!r}")
 
     @save_cookie
-    def login_with_id(self) -> None:
+    def login_with_id(self, with_default_cookie: bool = False) -> None:
+        self.session.cookies.clear()
+        if with_default_cookie:
+            self.session.cookies.update(config.COOKIE)
         self.session.get(AuthURL.LOGIN)
 
         try:
@@ -104,6 +106,10 @@ class LineWorks(BaseModel, TalkApi):
             r.raise_for_status()
         except HTTPError as e:
             raise LoginException(e)
+
+        j: dict = r.json()
+        if not j.get("accessUrl"):
+            self.login_with_id(with_default_cookie=True)
 
     def send_text_message(self, to: int, text: str) -> SendMessageResponse:
         return self.send_message(
