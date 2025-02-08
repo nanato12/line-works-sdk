@@ -108,8 +108,13 @@ class LineWorks(BaseModel, TalkApi):
             raise LoginException(e)
 
         j: dict = r.json()
-        if not j.get("accessUrl"):
-            self.login_with_id(with_default_cookie=True)
+        if j.get("accessUrl"):
+            return
+
+        if with_default_cookie:
+            raise LoginException("invalid login.")
+
+        self.login_with_id(with_default_cookie=True)
 
     def send_text_message(self, to: int, text: str) -> SendMessageResponse:
         return self.send_message(
