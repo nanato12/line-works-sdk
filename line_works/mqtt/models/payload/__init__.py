@@ -16,4 +16,5 @@ NOTIFICATION_TYPE_MODEL_MAPPING: dict[int, Type[PayloadTypes]] = {
     NotificationType.NOTIFICATION_EMOJI.value: MessagePayload,
     NotificationType.NOTIFICATION_BADGE.value: BadgePayload,
     NotificationType.NOTIFICATION_SERVICE.value: ServicePayload,
+    NotificationType.NOTIFICATION_FILE.value: MessagePayload,
 }
