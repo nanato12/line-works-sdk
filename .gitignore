@@ -137,3 +137,6 @@ wmqtt.py
 
 # openapi generator
 .openapi-generator
+
+# Editor settings
+.vscode/
