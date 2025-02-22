@@ -68,5 +68,5 @@ class MessageType(IntEnum):
     TASK_SYSTEM = 119
     SYS_SETTING = 120
 
-    # 現在V3が使われているようなので、18をNOTIFICATION_STICKERとして定義
+    # NOTE: 現在V3が使われているようなので、18をNOTIFICATION_STICKERとして定義
     STICKER = STICKER_V3
