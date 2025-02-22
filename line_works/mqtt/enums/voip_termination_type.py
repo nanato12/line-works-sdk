@@ -1,0 +1,15 @@
+from enum import IntEnum
+
+
+class VoipTerminationType(IntEnum):
+    UNDEFINED = 0
+    NOT_ALLOCATED_NUMBER = 1
+    NOT_FOUND_USER = 11
+    NORMAL_RELEASE = 16
+    USER_BUSY = 17
+    NOT_USER_RESPONDING = 18
+    RESOURCE_UNAVAILABLE = 47
+    CALL_REJECTED = 21
+    CALL_CANCELED = 77
+    CALL_HAVING_REQUEST_CALL_ID_HAS_BEEN = 86
+    MAX = 127
