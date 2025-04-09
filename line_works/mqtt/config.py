@@ -6,4 +6,4 @@ HEADERS = {
     "origin": "https://talk.worksmobile.com",
     "sec-websocket-protocol": "mqtt",
 }
-KEEPALIVE_INTERVAL_SEC = 10
+KEEP_ALIVE_INTERVAL_SEC = 50
