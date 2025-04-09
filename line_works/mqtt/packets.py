@@ -27,16 +27,16 @@ class ConnectionPacket(bytearray):
         protocol_name_bytes = "MQTT".encode("utf-8")
 
         remaining_length = (
-            2
+            2  # Protocol name
             + len(protocol_name_bytes)
-            + 1
-            + 1
-            + 2  # Variable header
-            + 2
+            + 1  # Protocol level
+            + 1  # Connect flags
+            + 2  # Keep alive
+            + 2  # Client ID
             + len(client_id_bytes)
-            + 2
+            + 2  # User name
             + len(username_bytes)
-            + 2
+            + 2  # Password
             + len(password_bytes)
         )
 
