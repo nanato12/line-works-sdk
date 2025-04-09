@@ -20,7 +20,8 @@ class ConnectionPacket(bytearray):
                 break
 
     def generate(self) -> bytes:
-        client_id = hex(random.getrandbits(128))[2:24]
+        import uuid
+        client_id = str(uuid.uuid4()).replace("-", "")[:23]
         client_id_bytes = client_id.encode("utf-8")
         username_bytes = "dummy".encode("utf-8")
         password_bytes = client_id_bytes
