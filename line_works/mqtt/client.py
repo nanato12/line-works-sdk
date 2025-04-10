@@ -58,6 +58,20 @@ class MQTTClient(BaseModel):
             tg.create_task(self.__send_keepalive())
             tg.create_task(self.__listen())
 
+    async def disconnect(self) -> None:
+        if self._ws is not None:
+            await self._ws.close()
+            self._ws = None
+    
+    async def __aenter__(self) -> "MQTTClient":
+        await self.connect()
+        return self
+    
+    async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
+        await self.disconnect()
+
+        
+
     async def __send_keepalive(self) -> None:
         while True:
             status_message = json.dumps(
