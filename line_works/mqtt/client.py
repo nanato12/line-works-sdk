@@ -70,8 +70,6 @@ class MQTTClient(BaseModel):
     async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
         await self.disconnect()
 
-        
-
     async def __send_keepalive(self) -> None:
         while True:
             status_message = json.dumps(
