@@ -1,7 +1,8 @@
 import asyncio
 import json
 from ssl import create_default_context
-from typing import Callable
+from types import TracebackType
+from typing import Callable, Self
 
 import websockets
 from pydantic import BaseModel, PrivateAttr
@@ -67,7 +68,12 @@ class MQTTClient(BaseModel):
         await self.connect()
         return self
     
-    async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
+    async def __aexit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: TracebackType | None
+    ) -> None:
         await self.disconnect()
 
     async def __send_keepalive(self) -> None:
