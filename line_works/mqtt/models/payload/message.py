@@ -4,6 +4,7 @@ from typing import Optional
 from pydantic import Field
 
 from line_works.exceptions import LogicException
+from line_works.mqtt.enums.channel_type import ChannelType
 from line_works.mqtt.enums.notification_type import NotificationType
 from line_works.mqtt.models.payload.badge import BadgePayload
 from line_works.openapi.talk.models.sticker import Sticker
@@ -14,7 +15,7 @@ class MessagePayload(BadgePayload):
     channel_no: Optional[int] = Field(alias="chNo", default=None)
     channel_photo_path: str = Field(alias="chPhotoPath", default="")
     channel_title: str = Field(alias="chTitle", default="")
-    channel_type: Optional[int] = Field(alias="chType", default=None)
+    channel_type: Optional[ChannelType] = Field(alias="chType", default=None)
     create_time: Optional[int] = Field(alias="createTime", default="")
     extras: str = Field(default="")
     from_photo_hash: str = Field(alias="fromPhotoHash", default="")
