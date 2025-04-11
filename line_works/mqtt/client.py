@@ -63,7 +63,7 @@ class MQTTClient(BaseModel):
             await self._ws.close()
             self._ws = None
     
-    async def __aenter__(self) -> "MQTTClient":
+    async def __aenter__(self) -> Self:
         await self.connect()
         return self
     
