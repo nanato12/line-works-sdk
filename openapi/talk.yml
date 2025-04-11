@@ -736,8 +736,6 @@ components:
         - $ref: '#/components/schemas/BaseResponse'
     IssueResourcePathRequest:
       type: object
-      x-stoplight:
-        id: 0180d8931750e
       x-examples:
         Example 1:
           serviceId: works
@@ -768,8 +766,6 @@ components:
         - channelType
     IssueResourcePathResponse:
       type: object
-      x-stoplight:
-        id: 07c2334da0614
       x-examples:
         Example 1:
           code: 200

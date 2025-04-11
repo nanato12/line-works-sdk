@@ -58,14 +58,10 @@ components:
   schemas:
     UploadResourceRequest:
       title: UploadResourceRequest
-      x-stoplight:
-        id: 7b8td0knc3z3k
       type: object
       properties:
         file:
           type: string
-          x-stoplight:
-            id: vmrkltq6gkn98
           format: binary
     UploadResouceResponse:
       type: object
