@@ -1,60 +1,103 @@
 openapi: 3.1.0
-x-stoplight:
-  id: xn3u4n8xueo0y
 info:
-  title: storage
+  title: LINE WORKS Storage API
   version: '1.0'
 servers:
-  - url: 'http://localhos https://storage.worksmobile.com'
+  - url: 'https://storage.worksmobile.com'
+    description: StorageURL
 paths:
-  /k/oneapp/r/jp2.500268443/500268443/v2-500268443-3378316791.412517280/:
-    get:
-      summary: Your GET endpoint
-      tags: []
-      responses: {}
-      operationId: get-k-oneapp-r-jp2.500268443-500268443-v2-500268443-3378316791.412517280-test.zip?
-    parameters: []
+  '/{resoucePath}':
+    parameters:
+      - schema:
+          type: string
+        name: resoucePath
+        in: path
+        required: true
+        description: Upload destination path
+    post:
+      summary: ''
+      operationId: upload-resource
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadResouceResponse'
+      description: Upload resources.
+      parameters:
+        - schema:
+            type: string
+            default: oneapp
+          in: query
+          name: Servicekey
+          description: Service key
+        - schema:
+            type: string
+            default: overwrite
+          in: query
+          name: writeMode
+          description: Write mode
+        - schema:
+            type: string
+            default: 'true'
+          in: query
+          name: isMakethumbnail
+          description: Make thumbnail flag
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+        description: file binary
 components:
   schemas:
-    User:
-      title: User
+    UploadResouceResponse:
       type: object
-      description: ''
-      examples:
-        - id: 142
-          firstName: Alice
-          lastName: Smith
-          email: alice.smith@gmail.com
-          dateOfBirth: '1997-10-31'
-          emailVerified: true
-          signUpDate: '2019-08-24'
+      x-examples:
+        Example 1:
+          code: 0
+          message: success
+          result:
+            accessKey: XXXXXXXXXXXXXXXXXXXXXXXXXXXXX==
+            resourceCid: v2-xxxxxxxxxxx-xxxxxxxxxxx
+            resourceSize: 3070
+            InjectionUploaded: 'false'
+            streamLength: 3070
       properties:
-        id:
+        code:
           type: integer
-          description: Unique identifier for the given user.
-        firstName:
+        message:
           type: string
-        lastName:
-          type: string
-        email:
-          type: string
-          format: email
-        dateOfBirth:
-          type: string
-          format: date
-          example: '1997-10-31'
-        emailVerified:
-          type: boolean
-          description: Set to true if the user's email has been verified.
-        createDate:
-          type: string
-          format: date
-          description: The date that the user was created.
+        result:
+          $ref: '#/components/schemas/UploadResourceReponseResult'
       required:
-        - id
-        - firstName
-        - lastName
-        - email
-        - emailVerified
-      x-stoplight:
-        id: 3loayo5nabv25
+        - code
+        - message
+        - result
+    UploadResourceReponseResult:
+      type: object
+      x-examples:
+        Example 1:
+          accessKey: XXXXXXXXXXXXXXXXXXXXXXXXXXXXX==
+          resourceCid: v2-xxxxxxxxxxx-xxxxxxxxxxx
+          resourceSize: 3070
+          InjectionUploaded: 'false'
+          streamLength: 3070
+      properties:
+        accessKey:
+          type: string
+        resourceCid:
+          type: string
+        resourceSize:
+          type: integer
+        InjectionUploaded:
+          type: string
+        streamLength:
+          type: integer
+      required:
+        - accessKey
+        - resourceCid
+        - resourceSize
+        - InjectionUploaded
+        - streamLength

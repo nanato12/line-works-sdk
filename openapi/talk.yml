@@ -81,20 +81,20 @@ paths:
   /p/oneapp/client/chat/issueResourcePath:
     post:
       summary: ''
-      operationId: upload-resource
+      operationId: issue-resource-path
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                type: object
-                properties: {}
+                $ref: '#/components/schemas/UploadResourceResponse'
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/UploadResourceRequest'
+      description: Issue the path to where the resource will be uploaded.
 components:
   schemas:
     Name:
@@ -131,7 +131,7 @@ components:
       type: object
       x-examples:
         Example 1:
-          content: nanato12@when-0
+          content: works@id
           typeCode: WORK
           represent: true
       properties:
@@ -152,8 +152,8 @@ components:
           serviceType: line
           worksAtUserNo: 913000042832541
           name: \u306a\u306a\u3068\u3044\u3064
-          id: nanato12@when-0
-          inviteUrl: 'https://works.do/R/ti/p/nanato12@when-0'
+          id: works@id
+          inviteUrl: 'https://works.do/R/ti/p/works@id'
       properties:
         serviceType:
           type: string
@@ -304,19 +304,19 @@ components:
       type: object
       x-examples:
         Example 1:
-          id: nanato12@when-0
-          inviteUrl: 'https://works.do/R/ti/p/nanato12@when-0'
+          id: works@id
+          inviteUrl: 'https://works.do/R/ti/p/works@id'
           users:
             - serviceType: line
               worksAtUserNo: 913000042832541
               name: \u306a\u306a\u3068\u3044\u3064
-              id: nanato12@when-0
-              inviteUrl: 'https://works.do/R/ti/p/nanato12@when-0'
+              id: works@id
+              inviteUrl: 'https://works.do/R/ti/p/works@id'
             - serviceType: worksat
               worksAtUserNo: 913000042832540
               name: \u306a\u306a\u3068\u3044\u3064
-              id: nanato12@when-0
-              inviteUrl: 'https://works.do/R/ti/p/nanato12@when-0'
+              id: works@id
+              inviteUrl: 'https://works.do/R/ti/p/works@id'
           worksAtCount: 0
           idSearchBlock: false
       properties:
@@ -342,7 +342,7 @@ components:
       type: object
       x-examples:
         Example 1:
-          domainId: 400478918
+          domainId: 123456789
           organization: \u306a\u306a\u305f\u3044\u3064
           groups: []
       properties:
@@ -362,9 +362,9 @@ components:
       type: object
       x-examples:
         Example 1:
-          tenantId: 400478918
-          domainId: 400478918
-          contactNo: 110002509202075
+          tenantId: 123456789
+          domainId: 123456789
+          contactNo: 123456789012345
           readOnly: false
           tempId: false
           name:
@@ -378,11 +378,11 @@ components:
           i18nNames: []
           photos: []
           organizations:
-            - domainId: 400478918
+            - domainId: 123456789
               organization: \u306a\u306a\u305f\u3044\u3064
               groups: []
           emails:
-            - content: nanato12@when-0
+            - content: works@id
               typeCode: WORK
               represent: true
             - content: okj0589@gmail.com
@@ -397,19 +397,19 @@ components:
           executive: false
           photoHash: ''
           worksAt:
-            id: nanato12@when-0
-            inviteUrl: 'https://works.do/R/ti/p/nanato12@when-0'
+            id: works@id
+            inviteUrl: 'https://works.do/R/ti/p/works@id'
             users:
               - serviceType: line
-                worksAtUserNo: 913000042832541
+                worksAtUserNo: 123456789012345
                 name: \u306a\u306a\u3068\u3044\u3064
-                id: nanato12@when-0
-                inviteUrl: 'https://works.do/R/ti/p/nanato12@when-0'
+                id: works@id
+                inviteUrl: 'https://works.do/R/ti/p/works@id'
               - serviceType: worksat
-                worksAtUserNo: 913000042832540
+                worksAtUserNo: 123456789012345
                 name: \u306a\u306a\u3068\u3044\u3064
-                id: nanato12@when-0
-                inviteUrl: 'https://works.do/R/ti/p/nanato12@when-0'
+                id: works@id
+                inviteUrl: 'https://works.do/R/ti/p/works@id'
             worksAtCount: 0
             idSearchBlock: false
           accessLimit: false
@@ -743,6 +743,7 @@ components:
       properties:
         serviceId:
           type: string
+          default: works
         channelNo:
           type: integer
         filename:
@@ -754,12 +755,33 @@ components:
         channelType:
           type: integer
       required:
-        - serviceId
         - channelNo
         - filename
         - filesize
         - msgType
         - channelType
+    UploadResourceResponse:
+      type: object
+      x-examples:
+        Example 1:
+          code: 200
+          message: OK
+          resourcePath: /k/oneapp/r/jp1.1234567890/1234567890/v2-1234567890-123456789.123456789/image_yyyymmdd_HH.MM.SS.png
+          fileUuid: 123456789
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+        resourcePath:
+          type: string
+        fileUuid:
+          type: integer
+      required:
+        - code
+        - message
+        - resourcePath
+        - fileUuid
   responses: {}
   requestBodies: {}
   parameters:
