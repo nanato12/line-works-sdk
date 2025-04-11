@@ -15,6 +15,7 @@ from line_works.logger import get_file_path_logger
 from line_works.openapi.talk.api.default_api import DefaultApi as TalkApi
 from line_works.openapi.talk.api_client import ApiClient as TalkApiClient
 from line_works.openapi.talk.models.caller import Caller
+from line_works.openapi.talk.models.flex_content import FlexContent
 from line_works.openapi.talk.models.send_message_response import (
     SendMessageResponse,
 )
@@ -68,7 +69,6 @@ class LineWorks(BaseModel, TalkApi):
         try:
             my_info = self.get_my_info()
         except Exception:
-            self.session.cookies.clear()
             self.login_with_id()
 
         TalkApi.__init__(self)
@@ -87,7 +87,10 @@ class LineWorks(BaseModel, TalkApi):
         logger.info(f"login success: {self!r}")
 
     @save_cookie
-    def login_with_id(self) -> None:
+    def login_with_id(self, with_default_cookie: bool = False) -> None:
+        self.session.cookies.clear()
+        if with_default_cookie:
+            self.session.cookies.update(config.COOKIE)
         self.session.get(AuthURL.LOGIN)
 
         try:
@@ -103,6 +106,15 @@ class LineWorks(BaseModel, TalkApi):
             r.raise_for_status()
         except HTTPError as e:
             raise LoginException(e)
+
+        j: dict = r.json()
+        if j.get("accessUrl"):
+            return
+
+        if with_default_cookie:
+            raise LoginException("invalid login.")
+
+        self.login_with_id(with_default_cookie=True)
 
     def send_text_message(self, to: int, text: str) -> SendMessageResponse:
         return self.send_message(
@@ -120,11 +132,11 @@ class LineWorks(BaseModel, TalkApi):
             )
         )
 
-    def send_file_message(
-        self, to: int, sticker: Sticker
+    def send_flex_message(
+        self, to: int, flex_content: FlexContent
     ) -> SendMessageResponse:
         return self.send_message(
-            send_message_request=SendMessageRequest.sticker_message(
-                self._caller, to, sticker
+            send_message_request=SendMessageRequest.flex_message(
+                self._caller, to, flex_content
             )
         )

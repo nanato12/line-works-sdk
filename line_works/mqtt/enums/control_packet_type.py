@@ -1,0 +1,18 @@
+from enum import IntEnum
+
+
+class ControlPacketType(IntEnum):
+    NORMAL = 93001
+    ACK = 93004
+    RECALL = 93005
+    JOIN = 94001
+    QUIT = 94002
+    SYSTEM = 94003
+    CHANNELSYNC = 94004
+    KICK = 94005
+    BOTMENU = 95001
+    LARGE = 93006
+    REACTION = 93007
+    VOIPJOINCOUNT = 96005
+    PTT_MIC_ON = 96007
+    PTT_MIC_OFF = 96008

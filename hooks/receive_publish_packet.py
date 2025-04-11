@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 
 from line_works.client import LineWorks
@@ -5,6 +6,7 @@ from line_works.logger import get_file_path_logger
 from line_works.mqtt.enums.notification_type import NotificationType
 from line_works.mqtt.models.packet import MQTTPacket
 from line_works.mqtt.models.payload.message import MessagePayload
+from line_works.openapi.talk.models.flex_content import FlexContent
 from line_works.openapi.talk.models.get_channel_members_request import (
     GetChannelMembersRequest,
 )
@@ -66,6 +68,14 @@ def receive_publish_packet(w: LineWorks, p: MQTTPacket) -> None:
             )
         )
         w.send_text_message(payload.channel_no, f"{r.data.members[0]!r}")
+
+    elif payload.loc_args1 == "/flex":
+        with open("src/sample_flex.json") as f:
+            j: dict = json.load(f)
+        w.send_flex_message(
+            payload.channel_no,
+            flex_content=FlexContent(alt_text="test", contents=j),
+        )
 
     if payload.notification_type == NotificationType.NOTIFICATION_STICKER:
         w.send_text_message(payload.channel_no, f"{payload.sticker=}")

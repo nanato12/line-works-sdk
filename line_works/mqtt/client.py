@@ -1,4 +1,5 @@
 import asyncio
+import json
 from ssl import create_default_context
 from typing import Callable
 
@@ -8,13 +9,14 @@ from websockets.asyncio.client import ClientConnection
 
 from line_works.client import LineWorks
 from line_works.logger import get_file_path_logger
-from line_works.mqtt import config, packets
+from line_works.mqtt import config
 from line_works.mqtt.enums.packet_type import PacketType
 from line_works.mqtt.exceptions import (
     LineWorksMQTTException,
     PacketParseException,
 )
 from line_works.mqtt.models.packet import MQTTPacket
+from line_works.mqtt.packets import ConnectionPacket
 
 logger = get_file_path_logger(__name__)
 
@@ -47,18 +49,23 @@ class MQTTClient(BaseModel):
             },
             subprotocols=["mqtt"],
             ping_interval=None,
+            ping_timeout=None,
         )
 
-        await self._ws.send(packets.CONNECTION_PACKET)
+        await self._ws.send(ConnectionPacket().generate())
 
         async with asyncio.TaskGroup() as tg:
-            tg.create_task(self.__send_pingreq())
+            tg.create_task(self.__send_keepalive())
             tg.create_task(self.__listen())
 
-    async def __send_pingreq(self) -> None:
+    async def __send_keepalive(self) -> None:
         while True:
-            await asyncio.sleep(config.KEEPALIVE_INTERVAL_SEC)
-            await self._ws.send(packets.PINGREQ_PACKET)
+            status_message = json.dumps(
+                {"type": "presence", "payload": "WEB_ONLINE"}
+            )
+            await self._ws.send(status_message)
+            await self._ws.send("keepalive")
+            await asyncio.sleep(config.KEEP_ALIVE_INTERVAL_SEC)
 
     async def __listen(self) -> None:
         while True:

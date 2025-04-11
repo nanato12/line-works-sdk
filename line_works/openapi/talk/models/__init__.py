@@ -17,6 +17,7 @@
 from line_works.openapi.talk.models.base_response import BaseResponse
 from line_works.openapi.talk.models.caller import Caller
 from line_works.openapi.talk.models.email import Email
+from line_works.openapi.talk.models.flex_content import FlexContent
 from line_works.openapi.talk.models.get_channel_members_request import GetChannelMembersRequest
 from line_works.openapi.talk.models.get_channel_members_response import GetChannelMembersResponse
 from line_works.openapi.talk.models.leave_channel_request import LeaveChannelRequest

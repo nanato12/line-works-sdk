@@ -27,10 +27,14 @@ $ pip install line-works-sdk==x.x.devyyyymmddHHMM
 ## Usage
 
 ```python
+import json
+
 from line_works.client import LineWorks
+from line_works.mqtt.enums.notification_type import NotificationType
 from line_works.mqtt.enums.packet_type import PacketType
 from line_works.mqtt.models.packet import MQTTPacket
 from line_works.mqtt.models.payload.message import MessagePayload
+from line_works.openapi.talk.models.flex_content import FlexContent
 from line_works.tracer import LineWorksTracer
 
 
@@ -50,6 +54,14 @@ def receive_publish_packet(w: LineWorks, p: MQTTPacket) -> None:
 
     elif payload.loc_args1 == "/msg":
         w.send_text_message(payload.channel_no, f"{payload!r}")
+
+    elif payload.loc_args1 == "/flex":
+        with open("src/sample_flex.json") as f:
+            j: dict = json.load(f)
+        w.send_flex_message(
+            payload.channel_no,
+            flex_content=FlexContent(alt_text="test", contents=j),
+        )
 
     if payload.notification_type == NotificationType.NOTIFICATION_STICKER:
         w.send_text_message(payload.channel_no, "スタンプ")
@@ -74,6 +86,8 @@ tracer.trace()
 ![sample_usage](https://github.com/user-attachments/assets/904eadeb-47be-4b48-b79f-b9aca761546b)
 
 ![sample_usage_2](https://github.com/user-attachments/assets/0f3097c9-345c-4a74-b08a-9338efa8dc40)
+
+![sample_usage_3](https://github.com/user-attachments/assets/c95b11f4-339c-424d-bd05-c538a52438d1)
 
 ## Contributors
 

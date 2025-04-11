@@ -8,7 +8,7 @@ docstring-code-format = false
 line-ending = "lf"
 
 [tool.ruff.lint]
-select = ["E", "F", "I"]
+select = ["E", "F", "I", "TID252", "ISC003"]
 ignore = []
 fixable = ["ALL"]
 unfixable = []

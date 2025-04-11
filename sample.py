@@ -1,8 +1,11 @@
+import json
+
 from line_works.client import LineWorks
 from line_works.mqtt.enums.notification_type import NotificationType
 from line_works.mqtt.enums.packet_type import PacketType
 from line_works.mqtt.models.packet import MQTTPacket
 from line_works.mqtt.models.payload.message import MessagePayload
+from line_works.openapi.talk.models.flex_content import FlexContent
 from line_works.tracer import LineWorksTracer
 
 
@@ -22,6 +25,14 @@ def receive_publish_packet(w: LineWorks, p: MQTTPacket) -> None:
 
     elif payload.loc_args1 == "/msg":
         w.send_text_message(payload.channel_no, f"{payload!r}")
+
+    elif payload.loc_args1 == "/flex":
+        with open("src/sample_flex.json") as f:
+            j: dict = json.load(f)
+        w.send_flex_message(
+            payload.channel_no,
+            flex_content=FlexContent(alt_text="test", contents=j),
+        )
 
     if payload.notification_type == NotificationType.NOTIFICATION_STICKER:
         w.send_text_message(payload.channel_no, "スタンプ")
