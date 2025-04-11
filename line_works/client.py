@@ -13,11 +13,11 @@ from requests import HTTPError, Session
 
 from line_works import config
 from line_works.decorator import save_cookie
-from line_works.enums.channel_type import ChannelType
 from line_works.enums.message_type import MessageType
 from line_works.enums.yes_no_option import YesNoOption
 from line_works.exceptions import LoginException
 from line_works.logger import get_file_path_logger
+from line_works.mqtt.enums.channel_type import ChannelType
 from line_works.openapi.storage.api.default_api import DefaultApi as StorageApi
 from line_works.openapi.storage.models.resource_extras import ResourceExtras
 from line_works.openapi.storage.models.upload_resouce_response import (
