@@ -44,6 +44,7 @@ paths:
           in: query
           name: isMakethumbnail
           description: Make thumbnail flag
+        - $ref: ./talk.yml#/components/parameters/Cookie
       requestBody:
         content:
           multipart/form-data:
@@ -101,3 +102,11 @@ components:
         - resourceSize
         - InjectionUploaded
         - streamLength
+  parameters:
+    cookie:
+      name: cookie
+      in: header
+      required: false
+      schema:
+        type: string
+      description: Cookie

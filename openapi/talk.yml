@@ -78,6 +78,8 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/LeaveChannelRequest'
+      parameters:
+        - $ref: '#/components/parameters/Cookie'
   /p/oneapp/client/chat/issueResourcePath:
     post:
       summary: ''
@@ -95,6 +97,8 @@ paths:
             schema:
               $ref: '#/components/schemas/UploadResourceRequest'
       description: Issue the path to where the resource will be uploaded.
+      parameters:
+        - $ref: '#/components/parameters/Cookie'
 components:
   schemas:
     Name:
@@ -788,7 +792,6 @@ components:
     Cookie:
       name: cookie
       in: header
-      required: false
       schema:
         type: string
       description: cookie
