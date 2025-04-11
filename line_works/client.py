@@ -1,3 +1,4 @@
+import io
 import json
 from os import makedirs
 from os.path import exists
@@ -8,6 +9,7 @@ from typing import Any
 from urllib.parse import urljoin
 
 from PIL import Image
+from PIL.ImageFile import ImageFile
 from pydantic import BaseModel, Field, PrivateAttr
 from requests import HTTPError, Session
 
@@ -145,30 +147,46 @@ class LineWorks(BaseModel, TalkApi):
         )
 
     def send_image_message(
-        self, to: int, channel_type: ChannelType, image_file_path: str
+        self,
+        to: int,
+        channel_type: ChannelType,
+        image_file_path: str,
     ) -> UploadResouceResponse:
         path = Path(image_file_path)
+        image_file = Image.open(image_file_path)
+        return self.send_image_message_with_file(
+            to=to,
+            channel_type=channel_type,
+            image_file=image_file,
+            file_name=path.name,
+        )
+
+    def send_image_message_with_file(
+        self,
+        to: int,
+        channel_type: ChannelType,
+        image_file: ImageFile,
+        file_name: str,
+    ) -> UploadResouceResponse:
+        bytes_io = io.BytesIO()
+        image_file.save(bytes_io, format="PNG")
+        image_bytes = bytes_io.getvalue()
 
         res = self.issue_resource_path(
             issue_resource_path_request=IssueResourcePathRequest(
                 channel_no=to,
                 channel_type=channel_type,
-                filename=path.name,
-                filesize=path.stat().st_size,
+                filename=file_name,
+                filesize=len(image_bytes),
                 msg_type=MessageType.IMAGE,
             )
         )
-
-        image = Image.open(image_file_path)
-        with open(image_file_path, "rb") as f:
-            data = f.read()
-
         extras = ResourceExtras(
-            filename=path.name,
-            filesize=path.stat().st_size,
+            filename=file_name,
+            filesize=len(image_bytes),
             resourcepath=res.var_resource_path,
-            width=image.width,
-            height=image.height,
+            width=image_file.width,
+            height=image_file.height,
         ).model_dump_json()
 
         # TODO: openapiで定義したものを使う
@@ -201,7 +219,7 @@ class LineWorks(BaseModel, TalkApi):
                 "writeMode": "overwrite",
                 "isMakethumbnail": "true",
             },
-            files={"file": data},
+            files={"file": image_bytes},
         )
         return UploadResouceResponse.model_validate(response.json())
 
