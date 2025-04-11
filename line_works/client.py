@@ -19,7 +19,6 @@ from line_works.enums.yes_no_option import YesNoOption
 from line_works.exceptions import LoginException
 from line_works.logger import get_file_path_logger
 from line_works.openapi.storage.api.default_api import DefaultApi as StorageApi
-from line_works.openapi.storage.api_client import ApiClient as StorageApiClient
 from line_works.openapi.storage.models.resource_extras import ResourceExtras
 from line_works.openapi.storage.models.upload_resouce_response import (
     UploadResouceResponse,
@@ -89,15 +88,14 @@ class LineWorks(BaseModel, TalkApi):
         except Exception:
             self.login_with_id()
 
-        storage_api_client = StorageApiClient(cookie=self.cookie_str)
-
         TalkApi.__init__(self)
         for k, v in config.HEADERS.items():
             self.api_client.set_default_header(k, v)
-            storage_api_client.set_default_header(k, v)
+            self.storage_api.api_client.set_default_header(k, v)
         self.api_client.set_default_header("Cookie", self.cookie_str)
-
-        self.storage_api = StorageApi(storage_api_client)
+        self.storage_api.api_client.set_default_header(
+            "Cookie", self.cookie_str
+        )
 
         my_info = self.get_my_info()
         self.tenant_id = my_info.tenant_id
