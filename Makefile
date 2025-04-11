@@ -48,3 +48,9 @@ generate:
 		-o . \
 		-c openapi/config.yml \
 		--additional-properties packageName=line_works.openapi.talk
+	npx @openapitools/openapi-generator-cli generate \
+		-i openapi/storage.yml \
+		-g python \
+		-o . \
+		-c openapi/config.yml \
+		--additional-properties packageName=line_works.openapi.storage
