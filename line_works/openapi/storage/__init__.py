@@ -31,5 +31,6 @@ from line_works.openapi.storage.exceptions import ApiAttributeError
 from line_works.openapi.storage.exceptions import ApiException
 
 # import models into sdk package
+from line_works.openapi.storage.models.resource_extras import ResourceExtras
 from line_works.openapi.storage.models.upload_resouce_response import UploadResouceResponse
 from line_works.openapi.storage.models.upload_resource_reponse_result import UploadResourceReponseResult

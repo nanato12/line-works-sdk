@@ -16,8 +16,8 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictStr
-from typing import Optional
+from pydantic import Field, StrictBytes, StrictStr
+from typing import Optional, Tuple, Union
 from typing_extensions import Annotated
 from line_works.openapi.storage.models.upload_resouce_response import UploadResouceResponse
 
@@ -42,11 +42,16 @@ class DefaultApi:
     @validate_call
     def upload_resource(
         self,
-        resouce_path: Annotated[StrictStr, Field(description="Upload destination path")],
+        x_type: Annotated[StrictStr, Field(description="Type")],
+        x_channelno: Annotated[StrictStr, Field(description="Channel No")],
+        x_extras: Annotated[StrictStr, Field(description="Extra infomation")],
+        upload_resource_path: Annotated[StrictStr, Field(description="Upload resource path")],
         servicekey: Annotated[Optional[StrictStr], Field(description="Service key")] = None,
         write_mode: Annotated[Optional[StrictStr], Field(description="Write mode")] = None,
         is_makethumbnail: Annotated[Optional[StrictStr], Field(description="Make thumbnail flag")] = None,
         cookie: Annotated[Optional[StrictStr], Field(description="cookie")] = None,
+        x_serviceid: Annotated[Optional[StrictStr], Field(description="Service ID")] = None,
+        file: Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -64,8 +69,14 @@ class DefaultApi:
 
         Upload resources.
 
-        :param resouce_path: Upload destination path (required)
-        :type resouce_path: str
+        :param x_type: Type (required)
+        :type x_type: str
+        :param x_channelno: Channel No (required)
+        :type x_channelno: str
+        :param x_extras: Extra infomation (required)
+        :type x_extras: str
+        :param upload_resource_path: Upload resource path (required)
+        :type upload_resource_path: str
         :param servicekey: Service key
         :type servicekey: str
         :param write_mode: Write mode
@@ -74,6 +85,10 @@ class DefaultApi:
         :type is_makethumbnail: str
         :param cookie: cookie
         :type cookie: str
+        :param x_serviceid: Service ID
+        :type x_serviceid: str
+        :param file:
+        :type file: bytearray
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -97,11 +112,16 @@ class DefaultApi:
         """ # noqa: E501
 
         _param = self._upload_resource_serialize(
-            resouce_path=resouce_path,
+            x_type=x_type,
+            x_channelno=x_channelno,
+            x_extras=x_extras,
+            upload_resource_path=upload_resource_path,
             servicekey=servicekey,
             write_mode=write_mode,
             is_makethumbnail=is_makethumbnail,
             cookie=cookie,
+            x_serviceid=x_serviceid,
+            file=file,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -125,11 +145,16 @@ class DefaultApi:
     @validate_call
     def upload_resource_with_http_info(
         self,
-        resouce_path: Annotated[StrictStr, Field(description="Upload destination path")],
+        x_type: Annotated[StrictStr, Field(description="Type")],
+        x_channelno: Annotated[StrictStr, Field(description="Channel No")],
+        x_extras: Annotated[StrictStr, Field(description="Extra infomation")],
+        upload_resource_path: Annotated[StrictStr, Field(description="Upload resource path")],
         servicekey: Annotated[Optional[StrictStr], Field(description="Service key")] = None,
         write_mode: Annotated[Optional[StrictStr], Field(description="Write mode")] = None,
         is_makethumbnail: Annotated[Optional[StrictStr], Field(description="Make thumbnail flag")] = None,
         cookie: Annotated[Optional[StrictStr], Field(description="cookie")] = None,
+        x_serviceid: Annotated[Optional[StrictStr], Field(description="Service ID")] = None,
+        file: Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -147,8 +172,14 @@ class DefaultApi:
 
         Upload resources.
 
-        :param resouce_path: Upload destination path (required)
-        :type resouce_path: str
+        :param x_type: Type (required)
+        :type x_type: str
+        :param x_channelno: Channel No (required)
+        :type x_channelno: str
+        :param x_extras: Extra infomation (required)
+        :type x_extras: str
+        :param upload_resource_path: Upload resource path (required)
+        :type upload_resource_path: str
         :param servicekey: Service key
         :type servicekey: str
         :param write_mode: Write mode
@@ -157,6 +188,10 @@ class DefaultApi:
         :type is_makethumbnail: str
         :param cookie: cookie
         :type cookie: str
+        :param x_serviceid: Service ID
+        :type x_serviceid: str
+        :param file:
+        :type file: bytearray
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -180,11 +215,16 @@ class DefaultApi:
         """ # noqa: E501
 
         _param = self._upload_resource_serialize(
-            resouce_path=resouce_path,
+            x_type=x_type,
+            x_channelno=x_channelno,
+            x_extras=x_extras,
+            upload_resource_path=upload_resource_path,
             servicekey=servicekey,
             write_mode=write_mode,
             is_makethumbnail=is_makethumbnail,
             cookie=cookie,
+            x_serviceid=x_serviceid,
+            file=file,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -208,11 +248,16 @@ class DefaultApi:
     @validate_call
     def upload_resource_without_preload_content(
         self,
-        resouce_path: Annotated[StrictStr, Field(description="Upload destination path")],
+        x_type: Annotated[StrictStr, Field(description="Type")],
+        x_channelno: Annotated[StrictStr, Field(description="Channel No")],
+        x_extras: Annotated[StrictStr, Field(description="Extra infomation")],
+        upload_resource_path: Annotated[StrictStr, Field(description="Upload resource path")],
         servicekey: Annotated[Optional[StrictStr], Field(description="Service key")] = None,
         write_mode: Annotated[Optional[StrictStr], Field(description="Write mode")] = None,
         is_makethumbnail: Annotated[Optional[StrictStr], Field(description="Make thumbnail flag")] = None,
         cookie: Annotated[Optional[StrictStr], Field(description="cookie")] = None,
+        x_serviceid: Annotated[Optional[StrictStr], Field(description="Service ID")] = None,
+        file: Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -230,8 +275,14 @@ class DefaultApi:
 
         Upload resources.
 
-        :param resouce_path: Upload destination path (required)
-        :type resouce_path: str
+        :param x_type: Type (required)
+        :type x_type: str
+        :param x_channelno: Channel No (required)
+        :type x_channelno: str
+        :param x_extras: Extra infomation (required)
+        :type x_extras: str
+        :param upload_resource_path: Upload resource path (required)
+        :type upload_resource_path: str
         :param servicekey: Service key
         :type servicekey: str
         :param write_mode: Write mode
@@ -240,6 +291,10 @@ class DefaultApi:
         :type is_makethumbnail: str
         :param cookie: cookie
         :type cookie: str
+        :param x_serviceid: Service ID
+        :type x_serviceid: str
+        :param file:
+        :type file: bytearray
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -263,11 +318,16 @@ class DefaultApi:
         """ # noqa: E501
 
         _param = self._upload_resource_serialize(
-            resouce_path=resouce_path,
+            x_type=x_type,
+            x_channelno=x_channelno,
+            x_extras=x_extras,
+            upload_resource_path=upload_resource_path,
             servicekey=servicekey,
             write_mode=write_mode,
             is_makethumbnail=is_makethumbnail,
             cookie=cookie,
+            x_serviceid=x_serviceid,
+            file=file,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -286,11 +346,16 @@ class DefaultApi:
 
     def _upload_resource_serialize(
         self,
-        resouce_path,
+        x_type,
+        x_channelno,
+        x_extras,
+        upload_resource_path,
         servicekey,
         write_mode,
         is_makethumbnail,
         cookie,
+        x_serviceid,
+        file,
         _request_auth,
         _content_type,
         _headers,
@@ -312,8 +377,8 @@ class DefaultApi:
         _body_params: Optional[bytes] = None
 
         # process the path parameters
-        if resouce_path is not None:
-            _path_params['resoucePath'] = resouce_path
+        if upload_resource_path is not None:
+            _path_params['uploadResourcePath'] = upload_resource_path
         # process the query parameters
         if servicekey is not None:
             
@@ -330,7 +395,17 @@ class DefaultApi:
         # process the header parameters
         if cookie is not None:
             _header_params['cookie'] = cookie
+        if x_serviceid is not None:
+            _header_params['x-serviceid'] = x_serviceid
+        if x_type is not None:
+            _header_params['x-type'] = x_type
+        if x_channelno is not None:
+            _header_params['x-channelno'] = x_channelno
+        if x_extras is not None:
+            _header_params['x-extras'] = x_extras
         # process the form parameters
+        if file is not None:
+            _files['file'] = file
         # process the body parameter
 
 
@@ -362,7 +437,7 @@ class DefaultApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/{resoucePath}',
+            resource_path='/{uploadResourcePath}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

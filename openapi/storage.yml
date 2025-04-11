@@ -6,14 +6,14 @@ servers:
   - url: 'https://storage.worksmobile.com'
     description: StorageURL
 paths:
-  '/{resoucePath}':
+  '{uploadResourcePath}':
     parameters:
       - schema:
           type: string
-        name: resoucePath
+        name: uploadResourcePath
         in: path
         required: true
-        description: Upload destination path
+        description: Upload resource path
     post:
       summary: ''
       operationId: upload-resource
@@ -45,14 +45,29 @@ paths:
           name: isMakethumbnail
           description: Make thumbnail flag
         - $ref: ./talk.yml#/components/parameters/Cookie
+        - $ref: '#/components/parameters/x-serviceid'
+        - $ref: '#/components/parameters/x-type'
+        - $ref: '#/components/parameters/x-channelno'
+        - $ref: '#/components/parameters/x-extras'
       requestBody:
         content:
           multipart/form-data:
             schema:
-              type: object
+              $ref: '#/components/schemas/UploadResourceRequest'
         description: file binary
 components:
   schemas:
+    UploadResourceRequest:
+      title: UploadResourceRequest
+      x-stoplight:
+        id: 7b8td0knc3z3k
+      type: object
+      properties:
+        file:
+          type: string
+          x-stoplight:
+            id: vmrkltq6gkn98
+          format: binary
     UploadResouceResponse:
       type: object
       x-examples:
@@ -102,6 +117,32 @@ components:
         - resourceSize
         - InjectionUploaded
         - streamLength
+    ResourceExtras:
+      type: object
+      x-examples:
+        Example 1:
+          filesize: 100
+          filename: path.name
+          resourcepath: res.var_resource_path
+          width: 100
+          height: 100
+      properties:
+        filesize:
+          type: integer
+        filename:
+          type: string
+        resourcepath:
+          type: string
+        width:
+          type: integer
+        height:
+          type: integer
+      required:
+        - filesize
+        - filename
+        - resourcepath
+        - width
+        - height
   parameters:
     cookie:
       name: cookie
@@ -110,3 +151,31 @@ components:
       schema:
         type: string
       description: Cookie
+    x-serviceid:
+      name: x-serviceid
+      in: header
+      schema:
+        type: string
+        default: works
+      description: Service ID
+    x-type:
+      name: x-type
+      in: header
+      required: true
+      schema:
+        type: string
+      description: Type
+    x-extras:
+      name: x-extras
+      in: header
+      required: true
+      schema:
+        type: string
+      description: Extra infomation
+    x-channelno:
+      name: x-channelno
+      in: header
+      required: true
+      schema:
+        type: string
+      description: Channel No
