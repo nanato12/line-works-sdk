@@ -21,6 +21,8 @@ from typing import Optional
 from typing_extensions import Annotated
 from line_works.openapi.talk.models.get_channel_members_request import GetChannelMembersRequest
 from line_works.openapi.talk.models.get_channel_members_response import GetChannelMembersResponse
+from line_works.openapi.talk.models.issue_resource_path_request import IssueResourcePathRequest
+from line_works.openapi.talk.models.issue_resource_path_response import IssueResourcePathResponse
 from line_works.openapi.talk.models.leave_channel_request import LeaveChannelRequest
 from line_works.openapi.talk.models.leave_channel_response import LeaveChannelResponse
 from line_works.openapi.talk.models.my_info import MyInfo
@@ -594,8 +596,297 @@ class DefaultApi:
 
 
     @validate_call
+    def issue_resource_path(
+        self,
+        cookie: Annotated[Optional[StrictStr], Field(description="cookie")] = None,
+        issue_resource_path_request: Optional[IssueResourcePathRequest] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> IssueResourcePathResponse:
+        """
+
+        Issue the path to where the resource will be uploaded.
+
+        :param cookie: cookie
+        :type cookie: str
+        :param issue_resource_path_request:
+        :type issue_resource_path_request: IssueResourcePathRequest
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._issue_resource_path_serialize(
+            cookie=cookie,
+            issue_resource_path_request=issue_resource_path_request,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "IssueResourcePathResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def issue_resource_path_with_http_info(
+        self,
+        cookie: Annotated[Optional[StrictStr], Field(description="cookie")] = None,
+        issue_resource_path_request: Optional[IssueResourcePathRequest] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[IssueResourcePathResponse]:
+        """
+
+        Issue the path to where the resource will be uploaded.
+
+        :param cookie: cookie
+        :type cookie: str
+        :param issue_resource_path_request:
+        :type issue_resource_path_request: IssueResourcePathRequest
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._issue_resource_path_serialize(
+            cookie=cookie,
+            issue_resource_path_request=issue_resource_path_request,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "IssueResourcePathResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def issue_resource_path_without_preload_content(
+        self,
+        cookie: Annotated[Optional[StrictStr], Field(description="cookie")] = None,
+        issue_resource_path_request: Optional[IssueResourcePathRequest] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """
+
+        Issue the path to where the resource will be uploaded.
+
+        :param cookie: cookie
+        :type cookie: str
+        :param issue_resource_path_request:
+        :type issue_resource_path_request: IssueResourcePathRequest
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._issue_resource_path_serialize(
+            cookie=cookie,
+            issue_resource_path_request=issue_resource_path_request,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "IssueResourcePathResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _issue_resource_path_serialize(
+        self,
+        cookie,
+        issue_resource_path_request,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        # process the query parameters
+        # process the header parameters
+        if cookie is not None:
+            _header_params['cookie'] = cookie
+        # process the form parameters
+        # process the body parameter
+        if issue_resource_path_request is not None:
+            _body_params = issue_resource_path_request
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = [
+        ]
+
+        return self.api_client.param_serialize(
+            method='POST',
+            resource_path='/p/oneapp/client/chat/issueResourcePath',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
     def leave_channel(
         self,
+        cookie: Annotated[Optional[StrictStr], Field(description="cookie")] = None,
         leave_channel_request: Optional[LeaveChannelRequest] = None,
         _request_timeout: Union[
             None,
@@ -614,6 +905,8 @@ class DefaultApi:
 
         Leave from the channel.
 
+        :param cookie: cookie
+        :type cookie: str
         :param leave_channel_request:
         :type leave_channel_request: LeaveChannelRequest
         :param _request_timeout: timeout setting for this request. If one
@@ -639,6 +932,7 @@ class DefaultApi:
         """ # noqa: E501
 
         _param = self._leave_channel_serialize(
+            cookie=cookie,
             leave_channel_request=leave_channel_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -663,6 +957,7 @@ class DefaultApi:
     @validate_call
     def leave_channel_with_http_info(
         self,
+        cookie: Annotated[Optional[StrictStr], Field(description="cookie")] = None,
         leave_channel_request: Optional[LeaveChannelRequest] = None,
         _request_timeout: Union[
             None,
@@ -681,6 +976,8 @@ class DefaultApi:
 
         Leave from the channel.
 
+        :param cookie: cookie
+        :type cookie: str
         :param leave_channel_request:
         :type leave_channel_request: LeaveChannelRequest
         :param _request_timeout: timeout setting for this request. If one
@@ -706,6 +1003,7 @@ class DefaultApi:
         """ # noqa: E501
 
         _param = self._leave_channel_serialize(
+            cookie=cookie,
             leave_channel_request=leave_channel_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -730,6 +1028,7 @@ class DefaultApi:
     @validate_call
     def leave_channel_without_preload_content(
         self,
+        cookie: Annotated[Optional[StrictStr], Field(description="cookie")] = None,
         leave_channel_request: Optional[LeaveChannelRequest] = None,
         _request_timeout: Union[
             None,
@@ -748,6 +1047,8 @@ class DefaultApi:
 
         Leave from the channel.
 
+        :param cookie: cookie
+        :type cookie: str
         :param leave_channel_request:
         :type leave_channel_request: LeaveChannelRequest
         :param _request_timeout: timeout setting for this request. If one
@@ -773,6 +1074,7 @@ class DefaultApi:
         """ # noqa: E501
 
         _param = self._leave_channel_serialize(
+            cookie=cookie,
             leave_channel_request=leave_channel_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -792,6 +1094,7 @@ class DefaultApi:
 
     def _leave_channel_serialize(
         self,
+        cookie,
         leave_channel_request,
         _request_auth,
         _content_type,
@@ -816,6 +1119,8 @@ class DefaultApi:
         # process the path parameters
         # process the query parameters
         # process the header parameters
+        if cookie is not None:
+            _header_params['cookie'] = cookie
         # process the form parameters
         # process the body parameter
         if leave_channel_request is not None:

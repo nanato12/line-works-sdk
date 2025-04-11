@@ -20,6 +20,8 @@ from line_works.openapi.talk.models.email import Email
 from line_works.openapi.talk.models.flex_content import FlexContent
 from line_works.openapi.talk.models.get_channel_members_request import GetChannelMembersRequest
 from line_works.openapi.talk.models.get_channel_members_response import GetChannelMembersResponse
+from line_works.openapi.talk.models.issue_resource_path_request import IssueResourcePathRequest
+from line_works.openapi.talk.models.issue_resource_path_response import IssueResourcePathResponse
 from line_works.openapi.talk.models.leave_channel_request import LeaveChannelRequest
 from line_works.openapi.talk.models.leave_channel_response import LeaveChannelResponse
 from line_works.openapi.talk.models.member import Member

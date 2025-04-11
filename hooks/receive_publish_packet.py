@@ -23,7 +23,11 @@ def receive_publish_packet(w: LineWorks, p: MQTTPacket) -> None:
     if not isinstance(payload, MessagePayload):
         return
 
-    if not payload.channel_no:
+    if (
+        not payload.channel_no
+        or not payload.from_user_no
+        or not payload.channel_type
+    ):
         return
 
     logger.info(f"{payload!r}")
@@ -77,6 +81,13 @@ def receive_publish_packet(w: LineWorks, p: MQTTPacket) -> None:
             flex_content=FlexContent(alt_text="test", contents=j),
         )
 
+    elif payload.loc_args1 == "/image":
+        w.send_image_message(
+            payload.channel_no,
+            payload.channel_type,
+            "hooks/image.png",
+        )
+
     if payload.notification_type == NotificationType.NOTIFICATION_STICKER:
         w.send_text_message(payload.channel_no, f"{payload.sticker=}")
-        w.send_sticker_message(payload.channel_no, payload.sticker)
+        # w.send_sticker_message(payload.channel_no, payload.sticker)

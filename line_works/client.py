@@ -2,20 +2,34 @@ import json
 from os import makedirs
 from os.path import exists
 from os.path import join as path_join
+from pathlib import Path
+from time import time
 from typing import Any
+from urllib.parse import urljoin
 
+from PIL import Image
 from pydantic import BaseModel, Field, PrivateAttr
 from requests import HTTPError, Session
 
 from line_works import config
 from line_works.decorator import save_cookie
+from line_works.enums.message_type import MessageType
 from line_works.enums.yes_no_option import YesNoOption
 from line_works.exceptions import LoginException
 from line_works.logger import get_file_path_logger
+from line_works.mqtt.enums.channel_type import ChannelType
+from line_works.openapi.storage.api.default_api import DefaultApi as StorageApi
+from line_works.openapi.storage.models.resource_extras import ResourceExtras
+from line_works.openapi.storage.models.upload_resouce_response import (
+    UploadResouceResponse,
+)
 from line_works.openapi.talk.api.default_api import DefaultApi as TalkApi
 from line_works.openapi.talk.api_client import ApiClient as TalkApiClient
 from line_works.openapi.talk.models.caller import Caller
 from line_works.openapi.talk.models.flex_content import FlexContent
+from line_works.openapi.talk.models.issue_resource_path_request import (
+    IssueResourcePathRequest,
+)
 from line_works.openapi.talk.models.send_message_response import (
     SendMessageResponse,
 )
@@ -38,6 +52,9 @@ class LineWorks(BaseModel, TalkApi):
     session: Session = Field(init=False, repr=False, default_factory=Session)
     api_client: TalkApiClient = Field(
         init=False, repr=False, default_factory=TalkApiClient
+    )
+    storage_api: StorageApi = Field(
+        init=False, repr=False, default_factory=StorageApi
     )
     _caller: Caller = PrivateAttr()
 
@@ -74,7 +91,11 @@ class LineWorks(BaseModel, TalkApi):
         TalkApi.__init__(self)
         for k, v in config.HEADERS.items():
             self.api_client.set_default_header(k, v)
+            self.storage_api.api_client.set_default_header(k, v)
         self.api_client.set_default_header("Cookie", self.cookie_str)
+        self.storage_api.api_client.set_default_header(
+            "Cookie", self.cookie_str
+        )
 
         my_info = self.get_my_info()
         self.tenant_id = my_info.tenant_id
@@ -122,6 +143,67 @@ class LineWorks(BaseModel, TalkApi):
                 self._caller, to, text
             )
         )
+
+    def send_image_message(
+        self, to: int, channel_type: ChannelType, image_file_path: str
+    ) -> UploadResouceResponse:
+        path = Path(image_file_path)
+
+        res = self.issue_resource_path(
+            issue_resource_path_request=IssueResourcePathRequest(
+                channel_no=to,
+                channel_type=channel_type,
+                filename=path.name,
+                filesize=path.stat().st_size,
+                msg_type=MessageType.IMAGE,
+            )
+        )
+
+        image = Image.open(image_file_path)
+        with open(image_file_path, "rb") as f:
+            data = f.read()
+
+        extras = ResourceExtras(
+            filename=path.name,
+            filesize=path.stat().st_size,
+            resourcepath=res.var_resource_path,
+            width=image.width,
+            height=image.height,
+        ).model_dump_json()
+
+        # TODO: openapiで定義したものを使う
+        # res = self.storage_api.upload_resource(
+        #     x_type=str(MessageType.IMAGE),
+        #     x_channelno=str(to),
+        #     x_extras=extras,
+        #     upload_resource_path=res.var_resource_path,
+        # )
+        # print(res)
+
+        self.session.headers.update(
+            {
+                "Device-Language": "ja_JP",
+                "x-resourcepath": res.var_resource_path,
+                "x-serviceid": "works",
+                "x-type": str(MessageType.IMAGE),
+                "x-callerno": str(self.contact_no),
+                "x-channelno": str(to),
+                "x-extras": extras,
+                "x-ocn": "1",
+                "x-tid": str(int(time() * 1000)),
+            }
+        )
+
+        response = self.session.post(
+            urljoin("https://storage.worksmobile.com", res.var_resource_path),
+            params={
+                "Servicekey": "oneapp",
+                "writeMode": "overwrite",
+                "isMakethumbnail": "true",
+            },
+            files={"file": data},
+        )
+        return UploadResouceResponse.model_validate(response.json())
 
     def send_sticker_message(
         self, to: int, sticker: Sticker

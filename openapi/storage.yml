@@ -1,0 +1,176 @@
+openapi: 3.1.0
+info:
+  title: LINE WORKS Storage API
+  version: '1.0'
+servers:
+  - url: 'https://storage.worksmobile.com'
+    description: StorageURL
+paths:
+  '/{uploadResourcePath}':
+    parameters:
+      - schema:
+          type: string
+        name: uploadResourcePath
+        in: path
+        required: true
+        description: Upload resource path
+    post:
+      summary: ''
+      operationId: upload-resource
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadResouceResponse'
+      description: Upload resources.
+      parameters:
+        - schema:
+            type: string
+            default: oneapp
+          in: query
+          name: Servicekey
+          description: Service key
+        - schema:
+            type: string
+            default: overwrite
+          in: query
+          name: writeMode
+          description: Write mode
+        - schema:
+            type: string
+            default: 'true'
+          in: query
+          name: isMakethumbnail
+          description: Make thumbnail flag
+        - $ref: '#/components/parameters/x-serviceid'
+        - $ref: '#/components/parameters/x-type'
+        - $ref: '#/components/parameters/x-channelno'
+        - $ref: '#/components/parameters/x-extras'
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UploadResourceRequest'
+        description: file binary
+components:
+  schemas:
+    UploadResourceRequest:
+      title: UploadResourceRequest
+      type: object
+      properties:
+        file:
+          type: string
+          format: binary
+    UploadResouceResponse:
+      type: object
+      x-examples:
+        Example 1:
+          code: 0
+          message: success
+          result:
+            accessKey: XXXXXXXXXXXXXXXXXXXXXXXXXXXXX==
+            resourceCid: v2-xxxxxxxxxxx-xxxxxxxxxxx
+            resourceSize: 3070
+            InjectionUploaded: 'false'
+            streamLength: 3070
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+        result:
+          $ref: '#/components/schemas/UploadResourceReponseResult'
+      required:
+        - code
+        - message
+        - result
+    UploadResourceReponseResult:
+      type: object
+      x-examples:
+        Example 1:
+          accessKey: XXXXXXXXXXXXXXXXXXXXXXXXXXXXX==
+          resourceCid: v2-xxxxxxxxxxx-xxxxxxxxxxx
+          resourceSize: 3070
+          InjectionUploaded: 'false'
+          streamLength: 3070
+      properties:
+        accessKey:
+          type: string
+        resourceCid:
+          type: string
+        resourceSize:
+          type: integer
+        InjectionUploaded:
+          type: string
+        streamLength:
+          type: integer
+      required:
+        - accessKey
+        - resourceCid
+        - resourceSize
+        - InjectionUploaded
+        - streamLength
+    ResourceExtras:
+      type: object
+      x-examples:
+        Example 1:
+          filesize: 100
+          filename: path.name
+          resourcepath: res.var_resource_path
+          width: 100
+          height: 100
+      properties:
+        filesize:
+          type: integer
+        filename:
+          type: string
+        resourcepath:
+          type: string
+        width:
+          type: integer
+        height:
+          type: integer
+      required:
+        - filesize
+        - filename
+        - resourcepath
+        - width
+        - height
+  parameters:
+    cookie:
+      name: cookie
+      in: header
+      required: false
+      schema:
+        type: string
+      description: Cookie
+    x-serviceid:
+      name: x-serviceid
+      in: header
+      schema:
+        type: string
+        default: works
+      description: Service ID
+    x-type:
+      name: x-type
+      in: header
+      required: true
+      schema:
+        type: string
+      description: Type
+    x-extras:
+      name: x-extras
+      in: header
+      required: true
+      schema:
+        type: string
+      description: Extra infomation
+    x-channelno:
+      name: x-channelno
+      in: header
+      required: true
+      schema:
+        type: string
+      description: Channel No
