@@ -47,5 +47,7 @@ from line_works.openapi.talk.models.send_message_request import SendMessageReque
 from line_works.openapi.talk.models.send_message_response import SendMessageResponse
 from line_works.openapi.talk.models.sent_message import SentMessage
 from line_works.openapi.talk.models.sticker import Sticker
+from line_works.openapi.talk.models.upload_resource_request import UploadResourceRequest
+from line_works.openapi.talk.models.upload_resource_response import UploadResourceResponse
 from line_works.openapi.talk.models.user import User
 from line_works.openapi.talk.models.works_at import WorksAt
