@@ -6,7 +6,7 @@ servers:
   - url: 'https://storage.worksmobile.com'
     description: StorageURL
 paths:
-  '{uploadResourcePath}':
+  '/{uploadResourcePath}':
     parameters:
       - schema:
           type: string
@@ -44,7 +44,6 @@ paths:
           in: query
           name: isMakethumbnail
           description: Make thumbnail flag
-        - $ref: ./talk.yml#/components/parameters/Cookie
         - $ref: '#/components/parameters/x-serviceid'
         - $ref: '#/components/parameters/x-type'
         - $ref: '#/components/parameters/x-channelno'

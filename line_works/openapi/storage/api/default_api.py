@@ -49,7 +49,6 @@ class DefaultApi:
         servicekey: Annotated[Optional[StrictStr], Field(description="Service key")] = None,
         write_mode: Annotated[Optional[StrictStr], Field(description="Write mode")] = None,
         is_makethumbnail: Annotated[Optional[StrictStr], Field(description="Make thumbnail flag")] = None,
-        cookie: Annotated[Optional[StrictStr], Field(description="cookie")] = None,
         x_serviceid: Annotated[Optional[StrictStr], Field(description="Service ID")] = None,
         file: Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]] = None,
         _request_timeout: Union[
@@ -83,8 +82,6 @@ class DefaultApi:
         :type write_mode: str
         :param is_makethumbnail: Make thumbnail flag
         :type is_makethumbnail: str
-        :param cookie: cookie
-        :type cookie: str
         :param x_serviceid: Service ID
         :type x_serviceid: str
         :param file:
@@ -119,7 +116,6 @@ class DefaultApi:
             servicekey=servicekey,
             write_mode=write_mode,
             is_makethumbnail=is_makethumbnail,
-            cookie=cookie,
             x_serviceid=x_serviceid,
             file=file,
             _request_auth=_request_auth,
@@ -152,7 +148,6 @@ class DefaultApi:
         servicekey: Annotated[Optional[StrictStr], Field(description="Service key")] = None,
         write_mode: Annotated[Optional[StrictStr], Field(description="Write mode")] = None,
         is_makethumbnail: Annotated[Optional[StrictStr], Field(description="Make thumbnail flag")] = None,
-        cookie: Annotated[Optional[StrictStr], Field(description="cookie")] = None,
         x_serviceid: Annotated[Optional[StrictStr], Field(description="Service ID")] = None,
         file: Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]] = None,
         _request_timeout: Union[
@@ -186,8 +181,6 @@ class DefaultApi:
         :type write_mode: str
         :param is_makethumbnail: Make thumbnail flag
         :type is_makethumbnail: str
-        :param cookie: cookie
-        :type cookie: str
         :param x_serviceid: Service ID
         :type x_serviceid: str
         :param file:
@@ -222,7 +215,6 @@ class DefaultApi:
             servicekey=servicekey,
             write_mode=write_mode,
             is_makethumbnail=is_makethumbnail,
-            cookie=cookie,
             x_serviceid=x_serviceid,
             file=file,
             _request_auth=_request_auth,
@@ -255,7 +247,6 @@ class DefaultApi:
         servicekey: Annotated[Optional[StrictStr], Field(description="Service key")] = None,
         write_mode: Annotated[Optional[StrictStr], Field(description="Write mode")] = None,
         is_makethumbnail: Annotated[Optional[StrictStr], Field(description="Make thumbnail flag")] = None,
-        cookie: Annotated[Optional[StrictStr], Field(description="cookie")] = None,
         x_serviceid: Annotated[Optional[StrictStr], Field(description="Service ID")] = None,
         file: Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]] = None,
         _request_timeout: Union[
@@ -289,8 +280,6 @@ class DefaultApi:
         :type write_mode: str
         :param is_makethumbnail: Make thumbnail flag
         :type is_makethumbnail: str
-        :param cookie: cookie
-        :type cookie: str
         :param x_serviceid: Service ID
         :type x_serviceid: str
         :param file:
@@ -325,7 +314,6 @@ class DefaultApi:
             servicekey=servicekey,
             write_mode=write_mode,
             is_makethumbnail=is_makethumbnail,
-            cookie=cookie,
             x_serviceid=x_serviceid,
             file=file,
             _request_auth=_request_auth,
@@ -353,7 +341,6 @@ class DefaultApi:
         servicekey,
         write_mode,
         is_makethumbnail,
-        cookie,
         x_serviceid,
         file,
         _request_auth,
@@ -393,8 +380,6 @@ class DefaultApi:
             _query_params.append(('isMakethumbnail', is_makethumbnail))
             
         # process the header parameters
-        if cookie is not None:
-            _header_params['cookie'] = cookie
         if x_serviceid is not None:
             _header_params['x-serviceid'] = x_serviceid
         if x_type is not None:
