@@ -21,13 +21,13 @@ from typing import Optional
 from typing_extensions import Annotated
 from line_works.openapi.talk.models.get_channel_members_request import GetChannelMembersRequest
 from line_works.openapi.talk.models.get_channel_members_response import GetChannelMembersResponse
+from line_works.openapi.talk.models.issue_resource_path_request import IssueResourcePathRequest
+from line_works.openapi.talk.models.issue_resource_path_response import IssueResourcePathResponse
 from line_works.openapi.talk.models.leave_channel_request import LeaveChannelRequest
 from line_works.openapi.talk.models.leave_channel_response import LeaveChannelResponse
 from line_works.openapi.talk.models.my_info import MyInfo
 from line_works.openapi.talk.models.send_message_request import SendMessageRequest
 from line_works.openapi.talk.models.send_message_response import SendMessageResponse
-from line_works.openapi.talk.models.upload_resource_request import UploadResourceRequest
-from line_works.openapi.talk.models.upload_resource_response import UploadResourceResponse
 
 from line_works.openapi.talk.api_client import ApiClient, RequestSerialized
 from line_works.openapi.talk.api_response import ApiResponse
@@ -599,7 +599,7 @@ class DefaultApi:
     def issue_resource_path(
         self,
         cookie: Annotated[Optional[StrictStr], Field(description="cookie")] = None,
-        upload_resource_request: Optional[UploadResourceRequest] = None,
+        issue_resource_path_request: Optional[IssueResourcePathRequest] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -612,15 +612,15 @@ class DefaultApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> UploadResourceResponse:
+    ) -> IssueResourcePathResponse:
         """
 
         Issue the path to where the resource will be uploaded.
 
         :param cookie: cookie
         :type cookie: str
-        :param upload_resource_request:
-        :type upload_resource_request: UploadResourceRequest
+        :param issue_resource_path_request:
+        :type issue_resource_path_request: IssueResourcePathRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -645,7 +645,7 @@ class DefaultApi:
 
         _param = self._issue_resource_path_serialize(
             cookie=cookie,
-            upload_resource_request=upload_resource_request,
+            issue_resource_path_request=issue_resource_path_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -653,7 +653,7 @@ class DefaultApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "UploadResourceResponse",
+            '200': "IssueResourcePathResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -670,7 +670,7 @@ class DefaultApi:
     def issue_resource_path_with_http_info(
         self,
         cookie: Annotated[Optional[StrictStr], Field(description="cookie")] = None,
-        upload_resource_request: Optional[UploadResourceRequest] = None,
+        issue_resource_path_request: Optional[IssueResourcePathRequest] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -683,15 +683,15 @@ class DefaultApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[UploadResourceResponse]:
+    ) -> ApiResponse[IssueResourcePathResponse]:
         """
 
         Issue the path to where the resource will be uploaded.
 
         :param cookie: cookie
         :type cookie: str
-        :param upload_resource_request:
-        :type upload_resource_request: UploadResourceRequest
+        :param issue_resource_path_request:
+        :type issue_resource_path_request: IssueResourcePathRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -716,7 +716,7 @@ class DefaultApi:
 
         _param = self._issue_resource_path_serialize(
             cookie=cookie,
-            upload_resource_request=upload_resource_request,
+            issue_resource_path_request=issue_resource_path_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -724,7 +724,7 @@ class DefaultApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "UploadResourceResponse",
+            '200': "IssueResourcePathResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -741,7 +741,7 @@ class DefaultApi:
     def issue_resource_path_without_preload_content(
         self,
         cookie: Annotated[Optional[StrictStr], Field(description="cookie")] = None,
-        upload_resource_request: Optional[UploadResourceRequest] = None,
+        issue_resource_path_request: Optional[IssueResourcePathRequest] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -761,8 +761,8 @@ class DefaultApi:
 
         :param cookie: cookie
         :type cookie: str
-        :param upload_resource_request:
-        :type upload_resource_request: UploadResourceRequest
+        :param issue_resource_path_request:
+        :type issue_resource_path_request: IssueResourcePathRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -787,7 +787,7 @@ class DefaultApi:
 
         _param = self._issue_resource_path_serialize(
             cookie=cookie,
-            upload_resource_request=upload_resource_request,
+            issue_resource_path_request=issue_resource_path_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -795,7 +795,7 @@ class DefaultApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "UploadResourceResponse",
+            '200': "IssueResourcePathResponse",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -807,7 +807,7 @@ class DefaultApi:
     def _issue_resource_path_serialize(
         self,
         cookie,
-        upload_resource_request,
+        issue_resource_path_request,
         _request_auth,
         _content_type,
         _headers,
@@ -835,8 +835,8 @@ class DefaultApi:
             _header_params['cookie'] = cookie
         # process the form parameters
         # process the body parameter
-        if upload_resource_request is not None:
-            _body_params = upload_resource_request
+        if issue_resource_path_request is not None:
+            _body_params = issue_resource_path_request
 
 
         # set the HTTP header `Accept`

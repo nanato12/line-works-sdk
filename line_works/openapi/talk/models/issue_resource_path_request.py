@@ -22,9 +22,9 @@ from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
-class UploadResourceRequest(BaseModel):
+class IssueResourcePathRequest(BaseModel):
     """
-    UploadResourceRequest
+    IssueResourcePathRequest
     """ # noqa: E501
     service_id: Optional[StrictStr] = Field(default='works', alias="serviceId")
     channel_no: StrictInt = Field(alias="channelNo")
@@ -52,7 +52,7 @@ class UploadResourceRequest(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of UploadResourceRequest from a JSON string"""
+        """Create an instance of IssueResourcePathRequest from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -77,7 +77,7 @@ class UploadResourceRequest(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of UploadResourceRequest from a dict"""
+        """Create an instance of IssueResourcePathRequest from a dict"""
         if obj is None:
             return None
 

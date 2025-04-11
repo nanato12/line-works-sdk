@@ -90,12 +90,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UploadResourceResponse'
+                $ref: '#/components/schemas/IssueResourcePathResponse'
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UploadResourceRequest'
+              $ref: '#/components/schemas/IssueResourcePathRequest'
       description: Issue the path to where the resource will be uploaded.
       parameters:
         - $ref: '#/components/parameters/Cookie'
@@ -734,8 +734,10 @@ components:
       title: LeaveChannelResponse
       allOf:
         - $ref: '#/components/schemas/BaseResponse'
-    UploadResourceRequest:
+    IssueResourcePathRequest:
       type: object
+      x-stoplight:
+        id: 0180d8931750e
       x-examples:
         Example 1:
           serviceId: works
@@ -764,8 +766,10 @@ components:
         - filesize
         - msgType
         - channelType
-    UploadResourceResponse:
+    IssueResourcePathResponse:
       type: object
+      x-stoplight:
+        id: 07c2334da0614
       x-examples:
         Example 1:
           code: 200
