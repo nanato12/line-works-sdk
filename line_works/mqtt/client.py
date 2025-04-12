@@ -63,16 +63,16 @@ class MQTTClient(BaseModel):
         if self._ws is not None:
             await self._ws.close()
             self._ws = None
-    
+
     async def __aenter__(self) -> Self:
         await self.connect()
         return self
-    
+
     async def __aexit__(
         self,
         exc_type: type[BaseException] | None,
         exc_val: BaseException | None,
-        exc_tb: TracebackType | None
+        exc_tb: TracebackType | None,
     ) -> None:
         await self.disconnect()
 
