@@ -9,7 +9,6 @@ from typing import Any
 from urllib.parse import urljoin
 
 from PIL import Image
-from PIL.ImageFile import ImageFile
 from pydantic import BaseModel, Field, PrivateAttr
 from requests import HTTPError, Session
 
@@ -153,11 +152,12 @@ class LineWorks(BaseModel, TalkApi):
         image_file_path: str,
     ) -> UploadResouceResponse:
         path = Path(image_file_path)
-        image_file = Image.open(image_file_path)
+        with open(path, "rb") as f:
+            image_bytes = f.read()
         return self.send_image_message_with_file(
             to=to,
             channel_type=channel_type,
-            image_file=image_file,
+            image_bytes=image_bytes,
             file_name=path.name,
         )
 
@@ -165,12 +165,10 @@ class LineWorks(BaseModel, TalkApi):
         self,
         to: int,
         channel_type: ChannelType,
-        image_file: ImageFile,
+        image_bytes: bytes,
         file_name: str,
     ) -> UploadResouceResponse:
-        bytes_io = io.BytesIO()
-        image_file.save(bytes_io, format="PNG")
-        image_bytes = bytes_io.getvalue()
+        image = Image.open(io.BytesIO(image_bytes), mode="r")
 
         res = self.issue_resource_path(
             issue_resource_path_request=IssueResourcePathRequest(
@@ -185,8 +183,8 @@ class LineWorks(BaseModel, TalkApi):
             filename=file_name,
             filesize=len(image_bytes),
             resourcepath=res.var_resource_path,
-            width=image_file.width,
-            height=image_file.height,
+            width=image.width,
+            height=image.height,
         ).model_dump_json()
 
         # TODO: openapiで定義したものを使う
