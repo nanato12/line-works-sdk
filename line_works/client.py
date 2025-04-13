@@ -145,15 +145,67 @@ class LineWorks(BaseModel, TalkApi):
             )
         )
 
-    def send_image_message(
+    def __upload_resource(
         self,
         to: int,
         channel_type: ChannelType,
-        image_file_path: str,
+        msg_type: MessageType,
+        resource_bytes: bytes,
+        file_name: str,
+        extras: ResourceExtras,
+    ) -> UploadResouceResponse:
+        res = self.issue_resource_path(
+            issue_resource_path_request=IssueResourcePathRequest(
+                channel_no=to,
+                channel_type=channel_type,
+                filename=file_name,
+                filesize=len(resource_bytes),
+                msg_type=msg_type,
+            )
+        )
+        extras.resourcepath = res.var_resource_path
+
+        # TODO: openapiで定義したものを使う
+        # res = self.storage_api.upload_resource(
+        #     x_type=str(msg_type),
+        #     x_channelno=str(to),
+        #     x_extras=extras,
+        #     upload_resource_path=res.var_resource_path,
+        # )
+        # print(res)
+
+        self.session.headers.update(
+            {
+                "Device-Language": "ja_JP",
+                "x-resourcepath": res.var_resource_path,
+                "x-serviceid": "works",
+                "x-type": str(msg_type),
+                "x-callerno": str(self.contact_no),
+                "x-channelno": str(to),
+                "x-extras": extras.model_dump_json(),
+                "x-ocn": "1",
+                "x-tid": str(int(time() * 1000)),
+            }
+        )
+
+        response = self.session.post(
+            urljoin("https://storage.worksmobile.com", res.var_resource_path),
+            params={
+                "Servicekey": "oneapp",
+                "writeMode": "overwrite",
+                "isMakethumbnail": "true",
+            },
+            files={"file": resource_bytes},
+        )
+        return UploadResouceResponse.model_validate(response.json())
+
+    def send_image_message(
+        self, to: int, channel_type: ChannelType, image_file_path: str
     ) -> UploadResouceResponse:
         path = Path(image_file_path)
         with open(path, "rb") as f:
             image_bytes = f.read()
+
         return self.send_image_message_with_file(
             to=to,
             channel_type=channel_type,
@@ -170,56 +222,32 @@ class LineWorks(BaseModel, TalkApi):
     ) -> UploadResouceResponse:
         image = Image.open(io.BytesIO(image_bytes), mode="r")
 
-        res = self.issue_resource_path(
-            issue_resource_path_request=IssueResourcePathRequest(
-                channel_no=to,
-                channel_type=channel_type,
-                filename=file_name,
-                filesize=len(image_bytes),
-                msg_type=MessageType.IMAGE,
-            )
-        )
         extras = ResourceExtras(
             filename=file_name,
             filesize=len(image_bytes),
-            resourcepath=res.var_resource_path,
             width=image.width,
             height=image.height,
-        ).model_dump_json()
-
-        # TODO: openapiで定義したものを使う
-        # res = self.storage_api.upload_resource(
-        #     x_type=str(MessageType.IMAGE),
-        #     x_channelno=str(to),
-        #     x_extras=extras,
-        #     upload_resource_path=res.var_resource_path,
-        # )
-        # print(res)
-
-        self.session.headers.update(
-            {
-                "Device-Language": "ja_JP",
-                "x-resourcepath": res.var_resource_path,
-                "x-serviceid": "works",
-                "x-type": str(MessageType.IMAGE),
-                "x-callerno": str(self.contact_no),
-                "x-channelno": str(to),
-                "x-extras": extras,
-                "x-ocn": "1",
-                "x-tid": str(int(time() * 1000)),
-            }
         )
 
-        response = self.session.post(
-            urljoin("https://storage.worksmobile.com", res.var_resource_path),
-            params={
-                "Servicekey": "oneapp",
-                "writeMode": "overwrite",
-                "isMakethumbnail": "true",
-            },
-            files={"file": image_bytes},
+        return self.__upload_resource(
+            to, channel_type, MessageType.IMAGE, image_bytes, file_name, extras
         )
-        return UploadResouceResponse.model_validate(response.json())
+
+    def send_file_message(
+        self, to: int, channel_type: ChannelType, file_path: str
+    ) -> UploadResouceResponse:
+        path = Path(file_path)
+        with open(path, "rb") as f:
+            file_bytes = f.read()
+
+        extras = ResourceExtras(
+            filename=path.name,
+            filesize=len(file_bytes),
+        )
+
+        return self.__upload_resource(
+            to, channel_type, MessageType.FILE, file_bytes, path.name, extras
+        )
 
     def send_sticker_message(
         self, to: int, sticker: Sticker
