@@ -88,6 +88,13 @@ def receive_publish_packet(w: LineWorks, p: MQTTPacket) -> None:
             "hooks/image.png",
         )
 
+    elif payload.loc_args1 == "/zip":
+        w.send_file_message(
+            payload.channel_no,
+            payload.channel_type,
+            "hooks/image.zip",
+        )
+
     if payload.notification_type == NotificationType.NOTIFICATION_STICKER:
         w.send_text_message(payload.channel_no, f"{payload.sticker=}")
         # w.send_sticker_message(payload.channel_no, payload.sticker)
