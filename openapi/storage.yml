@@ -128,6 +128,7 @@ components:
           type: string
         resourcepath:
           type: string
+          default: ''
         width:
           type: integer
         height:
@@ -135,9 +136,6 @@ components:
       required:
         - filesize
         - filename
-        - resourcepath
-        - width
-        - height
   parameters:
     cookie:
       name: cookie

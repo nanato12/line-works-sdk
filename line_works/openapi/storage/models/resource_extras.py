@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -28,9 +28,9 @@ class ResourceExtras(BaseModel):
     """ # noqa: E501
     filesize: StrictInt
     filename: StrictStr
-    resourcepath: StrictStr
-    width: StrictInt
-    height: StrictInt
+    resourcepath: Optional[StrictStr] = ''
+    width: Optional[StrictInt] = None
+    height: Optional[StrictInt] = None
     __properties: ClassVar[List[str]] = ["filesize", "filename", "resourcepath", "width", "height"]
 
     model_config = ConfigDict(
@@ -86,7 +86,7 @@ class ResourceExtras(BaseModel):
         _obj = cls.model_validate({
             "filesize": obj.get("filesize"),
             "filename": obj.get("filename"),
-            "resourcepath": obj.get("resourcepath"),
+            "resourcepath": obj.get("resourcepath") if obj.get("resourcepath") is not None else '',
             "width": obj.get("width"),
             "height": obj.get("height")
         })

@@ -7,9 +7,9 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **filesize** | **int** |  | 
 **filename** | **str** |  | 
-**resourcepath** | **str** |  | 
-**width** | **int** |  | 
-**height** | **int** |  | 
+**resourcepath** | **str** |  | [optional] [default to '']
+**width** | **int** |  | [optional] 
+**height** | **int** |  | [optional] 
 
 ## Example
 
