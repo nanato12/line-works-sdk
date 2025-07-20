@@ -13,7 +13,7 @@ NOTIFICATION_TYPE_MODEL_MAPPING: dict[int, Type[PayloadTypes]] = {
     NotificationType.NOTIFICATION_MESSAGE.value: MessagePayload,
     NotificationType.NOTIFICATION_STICKER.value: MessagePayload,
     NotificationType.NOTIFICATION_IMAGE.value: MessagePayload,
-    NotificationType.NOTIFICATION_LOCATION_EMOJI.value: MessagePayload,
+    NotificationType.NOTIFICATION_LOCATION.value: MessagePayload,
     NotificationType.NOTIFICATION_BADGE.value: BadgePayload,
     NotificationType.NOTIFICATION_SERVICE.value: ServicePayload,
     NotificationType.NOTIFICATION_FILE.value: MessagePayload,
