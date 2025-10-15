@@ -5,7 +5,7 @@ from os.path import exists
 from os.path import join as path_join
 from pathlib import Path
 from time import time
-from typing import Any
+from typing import Any, Optional
 from urllib.parse import urljoin
 
 from PIL import Image
@@ -18,6 +18,7 @@ from line_works.enums.message_type import MessageType
 from line_works.enums.yes_no_option import YesNoOption
 from line_works.exceptions import LoginException
 from line_works.logger import get_file_path_logger
+from line_works.models.substitution import Substitution
 from line_works.mqtt.enums.channel_type import ChannelType
 from line_works.openapi.storage.api.default_api import DefaultApi as StorageApi
 from line_works.openapi.storage.models.resource_extras import ResourceExtras
@@ -28,6 +29,9 @@ from line_works.openapi.talk.api.default_api import DefaultApi as TalkApi
 from line_works.openapi.talk.api_client import ApiClient as TalkApiClient
 from line_works.openapi.talk.models.caller import Caller
 from line_works.openapi.talk.models.flex_content import FlexContent
+from line_works.openapi.talk.models.get_channel_members_request import (
+    GetChannelMembersRequest,
+)
 from line_works.openapi.talk.models.issue_resource_path_request import (
     IssueResourcePathRequest,
 )
@@ -138,12 +142,64 @@ class LineWorks(BaseModel, TalkApi):
 
         self.login_with_id(with_default_cookie=True)
 
-    def send_text_message(self, to: int, text: str) -> SendMessageResponse:
-        return self.send_message(
-            send_message_request=SendMessageRequest.text_message(
-                self._caller, to, text
+    def _send_message_urlencoded(
+        self, send_message_request: SendMessageRequest
+    ) -> SendMessageResponse:
+        """メンションや絵文字を含むメッセージを
+        application/x-www-form-urlencodedで送信
+        """
+        payload_dict = send_message_request.model_dump(
+            by_alias=True,
+            exclude_none=True,
+        )
+        payload_json = json.dumps(
+            payload_dict, ensure_ascii=False, separators=(",", ":")
+        )
+        logger.debug(f"Sending message with payload: {payload_json}")
+
+        response = self.session.post(
+            "https://talk.worksmobile.com/p/oneapp/client/chat/sendMessage",
+            data={"payload": payload_json},
+            headers={
+                "Content-Type": (
+                    "application/x-www-form-urlencoded;charset=UTF-8"
+                ),
+            },
+        )
+        response.raise_for_status()
+        return SendMessageResponse.model_validate(response.json())
+
+    def get_user_name_map(self, channel_no: int) -> dict[int, str]:
+        """チャンネルメンバーのuserNoから名前へのマッピングを取得"""
+        response = self.get_channel_members(
+            get_channel_members_request=GetChannelMembersRequest(
+                channel_no=channel_no
             )
         )
+        return {member.user_no: member.name for member in response.members}
+
+    def send_text_message(
+        self,
+        to: int,
+        text: str,
+        substitution: "Optional[Substitution]" = None,
+    ) -> SendMessageResponse:
+        """テキストメッセージを送信"""
+        user_name_map = None
+        if substitution and getattr(substitution, "mentions", None):
+            user_name_map = self.get_user_name_map(to)
+
+        request = SendMessageRequest.text_message(
+            self._caller, to, text, substitution, user_name_map
+        )
+
+        if (
+            substitution
+            and getattr(substitution, "has_content", lambda: False)()
+        ):
+            return self._send_message_urlencoded(request)
+
+        return self.send_message(send_message_request=request)
 
     def __upload_resource(
         self,

@@ -1,6 +1,7 @@
 import json
 
 from line_works.client import LineWorks
+from line_works.models import Emoji, MentionAll, MentionUser, Substitution
 from line_works.mqtt.enums.notification_type import NotificationType
 from line_works.mqtt.enums.packet_type import PacketType
 from line_works.mqtt.models.packet import MQTTPacket
@@ -32,6 +33,36 @@ def receive_publish_packet(w: LineWorks, p: MQTTPacket) -> None:
         w.send_flex_message(
             payload.channel_no,
             flex_content=FlexContent(alt_text="test", contents=j),
+        )
+
+    elif payload.loc_args1 == "/mention":
+        substitution = Substitution(
+            mentions={"user": MentionUser(user_no=payload.from_user_no)}
+        )
+        w.send_text_message(
+            payload.channel_no,
+            "Hello, {user} !!",
+            substitution=substitution,
+        )
+
+    elif payload.loc_args1 == "/emoji":
+        substitution = Substitution(
+            emojis={
+                "emoji1": Emoji(
+                    product_id="3", package_id="1.1", emoji_id="1001D5"
+                )
+            }
+        )
+        w.send_text_message(
+            payload.channel_no,
+            "{emoji1}",
+            substitution=substitution,
+        )
+
+    elif payload.loc_args1 == "/all":
+        substitution = Substitution(mentions={"everyone": MentionAll()})
+        w.send_text_message(
+            payload.channel_no, "{everyone}", substitution=substitution
         )
 
     if payload.notification_type == NotificationType.NOTIFICATION_STICKER:
