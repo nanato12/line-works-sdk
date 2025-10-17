@@ -2,6 +2,27 @@
 
 このファイルはClaude Code (claude.ai/code) がこのリポジトリで作業する際のガイダンスを提供します。
 
+## コミュニケーション言語
+
+**重要**: GitHubのコメント、プルリクエストの説明、コミットメッセージを作成する際は、以下のルールに従ってください:
+
+- **メイン言語**: 日本語を使用
+- **英語要約**: 各セクションや重要な情報の後に、英語の要約を追加
+- **構成例**:
+  ```markdown
+  ### 変更内容
+
+  この変更では、ユーザー認証機能を改善し、セッション管理を強化しました。
+
+  ---
+
+  **Changes**
+
+  This change improves user authentication and enhances session management.
+  ```
+
+この形式により、日本語を優先しつつ、英語話者にも内容が理解できるようにします。
+
 ## プロジェクト概要
 
 LINE WORKS SDK for Python - LINE WORKSメッセージングプラットフォームと連携するためのPython SDK。Talk APIはOpenAPI 3.1.0仕様で定義されています。
