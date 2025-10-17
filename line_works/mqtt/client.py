@@ -103,12 +103,18 @@ class MQTTClient(BaseModel):
             if packet.type == PacketType.PUBLISH:
                 try:
                     p = packet.payload
+                    if p is None:
+                        logger.debug(
+                            "Skipping packet with invalid or empty payload"
+                        )
+                        return
                     if p.unique_id in self._unique_ids:
                         return
                     elif p.unique_id:
                         self._unique_ids.append(p.unique_id)
                 except PacketParseException as e:
                     logger.debug("packet parse error", exc_info=e)
+                    return
 
             logger.debug(f"{packet=}")
 

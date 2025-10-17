@@ -73,13 +73,13 @@ class MQTTPacket(BaseModel):
         return {}
 
     @property
-    def payload(self) -> PayloadTypes:
+    def payload(self) -> PayloadTypes | None:
         p = self.publish_payload
         if not (n_type := p.get("nType")):
-            raise PacketParseException(f"invalid payload: {p}")
+            return None
 
         if not (p_model := NOTIFICATION_TYPE_MODEL_MAPPING.get(n_type)):
-            raise PacketParseException(f"invalid notification type: {n_type}")
+            return None
 
         return p_model.model_validate(self.publish_payload)  # type: ignore
 
