@@ -21,6 +21,7 @@ from line_works.logger import get_file_path_logger
 from line_works.models.substitution import Substitution
 from line_works.mqtt.enums.channel_type import ChannelType
 from line_works.openapi.storage.api.default_api import DefaultApi as StorageApi
+from line_works.openapi.storage.api_client import ApiClient as StorageApiClient
 from line_works.openapi.storage.models.resource_extras import ResourceExtras
 from line_works.openapi.storage.models.upload_resouce_response import (
     UploadResouceResponse,
@@ -96,11 +97,17 @@ class LineWorks(BaseModel, TalkApi):
         TalkApi.__init__(self)
         for k, v in config.HEADERS.items():
             self.api_client.set_default_header(k, v)
-            self.storage_api.api_client.set_default_header(k, v)
         self.api_client.set_default_header("Cookie", self.cookie_str)
-        self.storage_api.api_client.set_default_header(
-            "Cookie", self.cookie_str
+
+        storage_api_client = StorageApiClient(
+            header_name="Cookie",
+            header_value=self.cookie_str,
+            cookie=self.cookie_str,
         )
+
+        for k, v in self.session.headers.items():
+            storage_api_client.set_default_header(k, v)
+        self.storage_api = StorageApi(api_client=storage_api_client)
 
         my_info = self.get_my_info()
         self.tenant_id = my_info.tenant_id
@@ -222,13 +229,22 @@ class LineWorks(BaseModel, TalkApi):
         extras.resourcepath = res.var_resource_path
 
         # TODO: openapiで定義したものを使う
-        # res = self.storage_api.upload_resource(
-        #     x_type=str(msg_type),
-        #     x_channelno=str(to),
-        #     x_extras=extras,
-        #     upload_resource_path=res.var_resource_path,
-        # )
-        # print(res)
+        print(self.storage_api.api_client.cookie)
+        print(self.storage_api.api_client.header)
+        print(self.cookie_str)
+        print(self.storage_api.api_client.cookie == self.cookie_str)
+
+        res = self.storage_api.upload_resource(
+            x_type=str(msg_type),
+            x_channelno=str(to),
+            x_extras=extras.model_dump_json(),
+            upload_resource_path=res.var_resource_path,
+            x_resourcepath=res.var_resource_path,
+            x_callerno=str(self.contact_no),
+            x_tid=str(int(time() * 1000)),
+            file=resource_bytes,
+        )
+        print(res)
 
         self.session.headers.update(
             {
