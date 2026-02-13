@@ -48,6 +48,11 @@ paths:
         - $ref: '#/components/parameters/x-type'
         - $ref: '#/components/parameters/x-channelno'
         - $ref: '#/components/parameters/x-extras'
+        - $ref: '#/components/parameters/Device-Language'
+        - $ref: '#/components/parameters/x-resourcepath'
+        - $ref: '#/components/parameters/x-callerno'
+        - $ref: '#/components/parameters/x-ocn'
+        - $ref: '#/components/parameters/x-tid'
       requestBody:
         content:
           multipart/form-data:
@@ -172,3 +177,39 @@ components:
       schema:
         type: string
       description: Channel No
+    Device-Language:
+      name: Device-Language
+      in: header
+      required: false
+      schema:
+        type: string
+        default: ja_JP
+      description: Device language
+    x-resourcepath:
+      name: x-resourcepath
+      in: header
+      schema:
+        type: string
+      description: Resource path
+    x-callerno:
+      name: x-callerno
+      in: header
+      required: false
+      schema:
+        type: string
+      description: Caller No
+    x-ocn:
+      name: x-ocn
+      in: header
+      required: false
+      schema:
+        type: string
+        default: '1'
+      description: ocn
+    x-tid:
+      name: x-tid
+      in: header
+      required: false
+      schema:
+        type: string
+      description: Time ID

@@ -21,6 +21,7 @@ from line_works.logger import get_file_path_logger
 from line_works.models.substitution import Substitution
 from line_works.mqtt.enums.channel_type import ChannelType
 from line_works.openapi.storage.api.default_api import DefaultApi as StorageApi
+from line_works.openapi.storage.api_client import ApiClient as StorageApiClient
 from line_works.openapi.storage.models.resource_extras import ResourceExtras
 from line_works.openapi.storage.models.upload_resouce_response import (
     UploadResouceResponse,
@@ -96,11 +97,22 @@ class LineWorks(BaseModel, TalkApi):
         TalkApi.__init__(self)
         for k, v in config.HEADERS.items():
             self.api_client.set_default_header(k, v)
-            self.storage_api.api_client.set_default_header(k, v)
         self.api_client.set_default_header("Cookie", self.cookie_str)
-        self.storage_api.api_client.set_default_header(
-            "Cookie", self.cookie_str
+
+        storage_api_client = StorageApiClient(
+            header_name="Cookie",
+            header_value=self.cookie_str,
+            cookie=self.cookie_str,
         )
+
+        headers = {
+            str(k): (v.decode() if isinstance(v, bytes) else str(v))
+            for k, v in self.session.headers.items()
+        }
+        for k, v in headers.items():
+            storage_api_client.set_default_header(k, v)
+
+        self.storage_api = StorageApi(api_client=storage_api_client)
 
         my_info = self.get_my_info()
         self.tenant_id = my_info.tenant_id
@@ -222,13 +234,22 @@ class LineWorks(BaseModel, TalkApi):
         extras.resourcepath = res.var_resource_path
 
         # TODO: openapiで定義したものを使う
-        # res = self.storage_api.upload_resource(
-        #     x_type=str(msg_type),
-        #     x_channelno=str(to),
-        #     x_extras=extras,
-        #     upload_resource_path=res.var_resource_path,
-        # )
-        # print(res)
+        print(self.storage_api.api_client.cookie)
+        print(self.storage_api.api_client.header)
+        print(self.cookie_str)
+        print(self.storage_api.api_client.cookie == self.cookie_str)
+
+        res = self.storage_api.upload_resource(
+            x_type=str(msg_type),
+            x_channelno=str(to),
+            x_extras=extras.model_dump_json(),
+            upload_resource_path=res.var_resource_path,
+            x_resourcepath=res.var_resource_path,
+            x_callerno=str(self.contact_no),
+            x_tid=str(int(time() * 1000)),
+            file=resource_bytes,
+        )
+        print(res)
 
         self.session.headers.update(
             {
@@ -287,6 +308,93 @@ class LineWorks(BaseModel, TalkApi):
 
         return self.__upload_resource(
             to, channel_type, MessageType.IMAGE, image_bytes, file_name, extras
+        )
+
+    def send_audio_message(
+        self, to: int, channel_type: ChannelType, audio_file_path: str
+    ) -> UploadResouceResponse:
+        path = Path(audio_file_path)
+        with open(path, "rb") as f:
+            audio_bytes = f.read()
+
+        return self.send_audio_message_with_file(
+            to=to,
+            channel_type=channel_type,
+            audio_bytes=audio_bytes,
+            file_name=path.name,
+        )
+
+    def send_audio_message_with_file(
+        self,
+        to: int,
+        channel_type: ChannelType,
+        audio_bytes: bytes,
+        file_name: str,
+    ) -> UploadResouceResponse:
+        extras = ResourceExtras(
+            filename=file_name,
+            filesize=len(audio_bytes),
+        )
+        return self.__upload_resource(
+            to, channel_type, MessageType.AUDIO, audio_bytes, file_name, extras
+        )
+
+    def send_voice_message(
+        self, to: int, channel_type: ChannelType, voice_file_path: str
+    ) -> UploadResouceResponse:
+        path = Path(voice_file_path)
+        with open(path, "rb") as f:
+            voice_bytes = f.read()
+
+        return self.send_voice_message_with_file(
+            to=to,
+            channel_type=channel_type,
+            voice_bytes=voice_bytes,
+            file_name=path.name,
+        )
+
+    def send_voice_message_with_file(
+        self,
+        to: int,
+        channel_type: ChannelType,
+        voice_bytes: bytes,
+        file_name: str,
+    ) -> UploadResouceResponse:
+        extras = ResourceExtras(
+            filename=file_name,
+            filesize=len(voice_bytes),
+        )
+        return self.__upload_resource(
+            to, channel_type, MessageType.VOICE, voice_bytes, file_name, extras
+        )
+
+    def send_video_message(
+        self, to: int, channel_type: ChannelType, video_file_path: str
+    ) -> UploadResouceResponse:
+        path = Path(video_file_path)
+        with open(path, "rb") as f:
+            video_bytes = f.read()
+
+        return self.send_video_message_with_file(
+            to=to,
+            channel_type=channel_type,
+            video_bytes=video_bytes,
+            file_name=path.name,
+        )
+
+    def send_video_message_with_file(
+        self,
+        to: int,
+        channel_type: ChannelType,
+        video_bytes: bytes,
+        file_name: str,
+    ) -> UploadResouceResponse:
+        extras = ResourceExtras(
+            filename=file_name,
+            filesize=len(video_bytes),
+        )
+        return self.__upload_resource(
+            to, channel_type, MessageType.VIDEO, video_bytes, file_name, extras
         )
 
     def send_file_message(

@@ -50,6 +50,11 @@ class DefaultApi:
         write_mode: Annotated[Optional[StrictStr], Field(description="Write mode")] = None,
         is_makethumbnail: Annotated[Optional[StrictStr], Field(description="Make thumbnail flag")] = None,
         x_serviceid: Annotated[Optional[StrictStr], Field(description="Service ID")] = None,
+        device_language: Annotated[Optional[StrictStr], Field(description="Device language")] = None,
+        x_resourcepath: Annotated[Optional[StrictStr], Field(description="Resource path")] = None,
+        x_callerno: Annotated[Optional[StrictStr], Field(description="Caller No")] = None,
+        x_ocn: Annotated[Optional[StrictStr], Field(description="ocn")] = None,
+        x_tid: Annotated[Optional[StrictStr], Field(description="Time ID")] = None,
         file: Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]] = None,
         _request_timeout: Union[
             None,
@@ -84,6 +89,16 @@ class DefaultApi:
         :type is_makethumbnail: str
         :param x_serviceid: Service ID
         :type x_serviceid: str
+        :param device_language: Device language
+        :type device_language: str
+        :param x_resourcepath: Resource path
+        :type x_resourcepath: str
+        :param x_callerno: Caller No
+        :type x_callerno: str
+        :param x_ocn: ocn
+        :type x_ocn: str
+        :param x_tid: Time ID
+        :type x_tid: str
         :param file:
         :type file: bytearray
         :param _request_timeout: timeout setting for this request. If one
@@ -117,6 +132,11 @@ class DefaultApi:
             write_mode=write_mode,
             is_makethumbnail=is_makethumbnail,
             x_serviceid=x_serviceid,
+            device_language=device_language,
+            x_resourcepath=x_resourcepath,
+            x_callerno=x_callerno,
+            x_ocn=x_ocn,
+            x_tid=x_tid,
             file=file,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -149,6 +169,11 @@ class DefaultApi:
         write_mode: Annotated[Optional[StrictStr], Field(description="Write mode")] = None,
         is_makethumbnail: Annotated[Optional[StrictStr], Field(description="Make thumbnail flag")] = None,
         x_serviceid: Annotated[Optional[StrictStr], Field(description="Service ID")] = None,
+        device_language: Annotated[Optional[StrictStr], Field(description="Device language")] = None,
+        x_resourcepath: Annotated[Optional[StrictStr], Field(description="Resource path")] = None,
+        x_callerno: Annotated[Optional[StrictStr], Field(description="Caller No")] = None,
+        x_ocn: Annotated[Optional[StrictStr], Field(description="ocn")] = None,
+        x_tid: Annotated[Optional[StrictStr], Field(description="Time ID")] = None,
         file: Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]] = None,
         _request_timeout: Union[
             None,
@@ -183,6 +208,16 @@ class DefaultApi:
         :type is_makethumbnail: str
         :param x_serviceid: Service ID
         :type x_serviceid: str
+        :param device_language: Device language
+        :type device_language: str
+        :param x_resourcepath: Resource path
+        :type x_resourcepath: str
+        :param x_callerno: Caller No
+        :type x_callerno: str
+        :param x_ocn: ocn
+        :type x_ocn: str
+        :param x_tid: Time ID
+        :type x_tid: str
         :param file:
         :type file: bytearray
         :param _request_timeout: timeout setting for this request. If one
@@ -216,6 +251,11 @@ class DefaultApi:
             write_mode=write_mode,
             is_makethumbnail=is_makethumbnail,
             x_serviceid=x_serviceid,
+            device_language=device_language,
+            x_resourcepath=x_resourcepath,
+            x_callerno=x_callerno,
+            x_ocn=x_ocn,
+            x_tid=x_tid,
             file=file,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -248,6 +288,11 @@ class DefaultApi:
         write_mode: Annotated[Optional[StrictStr], Field(description="Write mode")] = None,
         is_makethumbnail: Annotated[Optional[StrictStr], Field(description="Make thumbnail flag")] = None,
         x_serviceid: Annotated[Optional[StrictStr], Field(description="Service ID")] = None,
+        device_language: Annotated[Optional[StrictStr], Field(description="Device language")] = None,
+        x_resourcepath: Annotated[Optional[StrictStr], Field(description="Resource path")] = None,
+        x_callerno: Annotated[Optional[StrictStr], Field(description="Caller No")] = None,
+        x_ocn: Annotated[Optional[StrictStr], Field(description="ocn")] = None,
+        x_tid: Annotated[Optional[StrictStr], Field(description="Time ID")] = None,
         file: Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]] = None,
         _request_timeout: Union[
             None,
@@ -282,6 +327,16 @@ class DefaultApi:
         :type is_makethumbnail: str
         :param x_serviceid: Service ID
         :type x_serviceid: str
+        :param device_language: Device language
+        :type device_language: str
+        :param x_resourcepath: Resource path
+        :type x_resourcepath: str
+        :param x_callerno: Caller No
+        :type x_callerno: str
+        :param x_ocn: ocn
+        :type x_ocn: str
+        :param x_tid: Time ID
+        :type x_tid: str
         :param file:
         :type file: bytearray
         :param _request_timeout: timeout setting for this request. If one
@@ -315,6 +370,11 @@ class DefaultApi:
             write_mode=write_mode,
             is_makethumbnail=is_makethumbnail,
             x_serviceid=x_serviceid,
+            device_language=device_language,
+            x_resourcepath=x_resourcepath,
+            x_callerno=x_callerno,
+            x_ocn=x_ocn,
+            x_tid=x_tid,
             file=file,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -342,6 +402,11 @@ class DefaultApi:
         write_mode,
         is_makethumbnail,
         x_serviceid,
+        device_language,
+        x_resourcepath,
+        x_callerno,
+        x_ocn,
+        x_tid,
         file,
         _request_auth,
         _content_type,
@@ -388,6 +453,16 @@ class DefaultApi:
             _header_params['x-channelno'] = x_channelno
         if x_extras is not None:
             _header_params['x-extras'] = x_extras
+        if device_language is not None:
+            _header_params['Device-Language'] = device_language
+        if x_resourcepath is not None:
+            _header_params['x-resourcepath'] = x_resourcepath
+        if x_callerno is not None:
+            _header_params['x-callerno'] = x_callerno
+        if x_ocn is not None:
+            _header_params['x-ocn'] = x_ocn
+        if x_tid is not None:
+            _header_params['x-tid'] = x_tid
         # process the form parameters
         if file is not None:
             _files['file'] = file
