@@ -22,6 +22,10 @@ fmt:
 	ruff format
 	ruff check --fix
 
+.PHONY: test
+test:
+	pytest
+
 .PHONY: build
 build:
 	rm -rf build

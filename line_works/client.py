@@ -17,6 +17,11 @@ from line_works.decorator import save_cookie
 from line_works.enums.message_type import MessageType
 from line_works.enums.yes_no_option import YesNoOption
 from line_works.exceptions import LoginException
+from line_works.http import (
+    DEFAULT_TIMEOUT,
+    TimeoutTalkApiClient,
+    create_session,
+)
 from line_works.logger import get_file_path_logger
 from line_works.models.substitution import Substitution
 from line_works.mqtt.enums.channel_type import ChannelType
@@ -35,6 +40,7 @@ from line_works.openapi.talk.models.get_channel_members_request import (
 from line_works.openapi.talk.models.issue_resource_path_request import (
     IssueResourcePathRequest,
 )
+from line_works.openapi.talk.models.my_info import MyInfo
 from line_works.openapi.talk.models.send_message_response import (
     SendMessageResponse,
 )
@@ -54,9 +60,14 @@ class LineWorks(BaseModel, TalkApi):
     tenant_id: int = Field(init=False, default=0)
     domain_id: int = Field(init=False, default=0)
     contact_no: int = Field(init=False, default=0)
-    session: Session = Field(init=False, repr=False, default_factory=Session)
+    request_timeout: tuple[float, float] = Field(
+        repr=False, default=DEFAULT_TIMEOUT
+    )
+    session: Session = Field(
+        init=False, repr=False, default_factory=create_session
+    )
     api_client: TalkApiClient = Field(
-        init=False, repr=False, default_factory=TalkApiClient
+        init=False, repr=False, default_factory=TimeoutTalkApiClient
     )
     storage_api: StorageApi = Field(
         init=False, repr=False, default_factory=StorageApi
@@ -80,29 +91,40 @@ class LineWorks(BaseModel, TalkApi):
 
     def model_post_init(self, __context: Any) -> None:
         makedirs(self.session_dir, exist_ok=True)
+
+        self.session = create_session(self.request_timeout)
         self.session.headers.update(config.HEADERS)
+        self.api_client = TimeoutTalkApiClient(self.request_timeout)
+        TalkApi.__init__(self, api_client=self.api_client)
+        for k, v in config.HEADERS.items():
+            self.api_client.set_default_header(k, v)
+            self.storage_api.api_client.set_default_header(k, v)
 
         if exists(self.cookie_path):
             # login with cookie
             with open(self.cookie_path) as j:
                 c = json.load(j)
             self.session.cookies.update(c)
+        self.__sync_cookie_header()
 
         try:
             my_info = self.get_my_info()
-        except Exception:
+        except Exception as e:
+            logger.info(f"Saved session is not valid, logging in: {e!r}")
             self.login_with_id()
+            self.__sync_cookie_header()
+            my_info = self.get_my_info()
 
-        TalkApi.__init__(self)
-        for k, v in config.HEADERS.items():
-            self.api_client.set_default_header(k, v)
-            self.storage_api.api_client.set_default_header(k, v)
+        self.__apply_my_info(my_info)
+        logger.info(f"login success: {self!r}")
+
+    def __sync_cookie_header(self) -> None:
         self.api_client.set_default_header("Cookie", self.cookie_str)
         self.storage_api.api_client.set_default_header(
             "Cookie", self.cookie_str
         )
 
-        my_info = self.get_my_info()
+    def __apply_my_info(self, my_info: MyInfo) -> None:
         self.tenant_id = my_info.tenant_id
         self.domain_id = my_info.domain_id
         self.contact_no = my_info.contact_no
@@ -110,7 +132,22 @@ class LineWorks(BaseModel, TalkApi):
             domain_id=self.domain_id, user_no=self.contact_no
         )
 
-        logger.info(f"login success: {self!r}")
+    def ensure_login(self) -> bool:
+        """セッションが有効か確認し、無効なら再ログインする。
+
+        Returns:
+            bool: 再ログインした場合 True
+        """
+        try:
+            self.get_my_info()
+            return False
+        except Exception as e:
+            logger.info(f"Session expired, logging in again: {e!r}")
+        self.login_with_id()
+        self.__sync_cookie_header()
+        self.__apply_my_info(self.get_my_info())
+        logger.info(f"re-login success: {self!r}")
+        return True
 
     @save_cookie
     def login_with_id(self, with_default_cookie: bool = False) -> None:
@@ -230,19 +267,17 @@ class LineWorks(BaseModel, TalkApi):
         # )
         # print(res)
 
-        self.session.headers.update(
-            {
-                "Device-Language": "ja_JP",
-                "x-resourcepath": res.var_resource_path,
-                "x-serviceid": "works",
-                "x-type": str(msg_type),
-                "x-callerno": str(self.contact_no),
-                "x-channelno": str(to),
-                "x-extras": extras.model_dump_json(),
-                "x-ocn": "1",
-                "x-tid": str(int(time() * 1000)),
-            }
-        )
+        headers = {
+            "Device-Language": "ja_JP",
+            "x-resourcepath": res.var_resource_path,
+            "x-serviceid": "works",
+            "x-type": str(msg_type),
+            "x-callerno": str(self.contact_no),
+            "x-channelno": str(to),
+            "x-extras": extras.model_dump_json(),
+            "x-ocn": "1",
+            "x-tid": str(int(time() * 1000)),
+        }
 
         response = self.session.post(
             urljoin("https://storage.worksmobile.com", res.var_resource_path),
@@ -252,7 +287,9 @@ class LineWorks(BaseModel, TalkApi):
                 "isMakethumbnail": "true",
             },
             files={"file": resource_bytes},
+            headers=headers,
         )
+        response.raise_for_status()
         return UploadResouceResponse.model_validate(response.json())
 
     def send_image_message(
